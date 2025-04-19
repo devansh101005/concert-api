@@ -6,14 +6,71 @@ const pool    = require('../db');
 // GET /api/concerts
 router.get('/', async (req, res) => {
   try {
-    const q = `
-      SELECT c.concert_id, c.name, c.date, c.time,
+    const {
+      location,
+      city,
+      min_capacity,
+      max_capacity,
+      start_date,
+      end_date,
+      genre,
+      spons_id
+    } = req.query;
+
+    let baseQuery = `
+      SELECT DISTINCT c.concert_id, c.name, c.date, c.time,
              v.name AS venue, v.city
       FROM concert c
       JOIN venue v ON c.venue_id = v.venue_id
-      ORDER BY c.date;
+      LEFT JOIN concert_location cl ON c.concert_id = cl.concert_id
+      LEFT JOIN performs p ON c.concert_id = p.concert_id
+      LEFT JOIN artist a ON p.artist_id = a.artist_id
     `;
-    const { rows } = await pool.query(q);
+
+    let conditions = [];
+    let params = [];
+    let paramIndex = 1;
+
+    if (location) {
+      conditions.push(`cl.location ILIKE $${paramIndex++}`);
+      params.push(`%${location}%`);
+    }
+    if (city) {
+      conditions.push(`v.city ILIKE $${paramIndex++}`);
+      params.push(`%${city}%`);
+    }
+    if (min_capacity) {
+      conditions.push(`v.capacity >= $${paramIndex++}`);
+      params.push(min_capacity);
+    }
+    if (max_capacity) {
+      conditions.push(`v.capacity <= $${paramIndex++}`);
+      params.push(max_capacity);
+    }
+    if (start_date) {
+      conditions.push(`c.date >= $${paramIndex++}`);
+      params.push(start_date);
+    }
+    if (end_date) {
+      conditions.push(`c.date <= $${paramIndex++}`);
+      params.push(end_date);
+    }
+    if (genre) {
+      conditions.push(`a.genre ILIKE $${paramIndex++}`);
+      params.push(`%${genre}%`);
+    }
+    if (spons_id) {
+      conditions.push(`c.spons_id = $${paramIndex++}`);
+      params.push(spons_id);
+    }
+
+    if (conditions.length > 0) {
+      baseQuery += ' WHERE ' + conditions.join(' AND ');
+    }
+
+    baseQuery += ' ORDER BY c.date;';
+
+    const { rows } = await pool.query(baseQuery, params);
     res.json(rows);
   } catch (err) {
     console.error(err);
