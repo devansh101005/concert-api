@@ -1,11 +1,16 @@
 // server.js
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
 
 const setupTriggers = require('./db/setupTriggers');
 
+app.use(cors({
+  origin: 'http://localhost:3000', // frontend origin
+  credentials: true,
+}));
 app.use(express.json());
 
 app.get('/', (req, res) => res.send('🎵 Concert API is alive'));

@@ -87,7 +87,7 @@ CREATE TABLE payment (
 
 -- 9. BUYER
 CREATE TABLE buyer (
-  buyer_id   INT PRIMARY KEY,
+  buyer_id   SERIAL PRIMARY KEY,
   first_name VARCHAR(255) NOT NULL,
   last_name  VARCHAR(255) NOT NULL,
   email_id   VARCHAR(255) UNIQUE,
@@ -119,3 +119,12 @@ CREATE TABLE staff (
   concert_id   INT,
   FOREIGN KEY (concert_id) REFERENCES concert(concert_id)
 );
+
+
+
+
+
+
+
+
+

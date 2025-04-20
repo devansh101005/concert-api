@@ -78,6 +78,26 @@ router.get('/', async (req, res) => {
   }
 });
 
+// POST /api/concerts - add a new concert
+router.post('/', async (req, res) => {
+  const { name, date } = req.body;
+  if (!name || !date) {
+    return res.status(400).json({ error: 'Name and date are required' });
+  }
+  try {
+    const insertQuery = `
+      INSERT INTO concert (name, date)
+      VALUES ($1, $2)
+      RETURNING concert_id, name, date;
+    `;
+    const { rows } = await pool.query(insertQuery, [name, date]);
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to add concert', details: err.message });
+  }
+});
+
 module.exports = router;
 
 
