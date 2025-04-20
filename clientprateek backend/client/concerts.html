@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Concerts - ConcertHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans">
+  <header class="bg-blue-600 text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">🎶 ConcertHub</h1>
+      <nav>
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-700 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 bg-blue-700 rounded">Concerts</a>
+        <a href="login.html" class="px-3 py-2 hover:bg-blue-700 rounded">Login</a>
+        <a href="register.html" class="px-3 py-2 hover:bg-blue-700 rounded">Register</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-6">
+    <h2 class="text-3xl font-semibold mb-6">Upcoming Concerts</h2>
+
+    <form id="concertForm" class="mb-6 space-y-4 max-w-md">
+      <input type="text" id="name" placeholder="Concert Name" class="w-full p-2 border border-gray-300 rounded" required />
+      <input type="date" id="date" class="w-full p-2 border border-gray-300 rounded" required />
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Concert</button>
+      <p id="formMessage" class="mt-2"></p>
+    </form>
+
+    <ul id="concertList" class="space-y-2">
+      <!-- Concert items will be appended here -->
+    </ul>
+  </main>
+
+  <script>
+    const concertList = document.getElementById('concertList');
+    const concertForm = document.getElementById('concertForm');
+    const formMessage = document.getElementById('formMessage');
+
+    async function fetchConcerts() {
+      concertList.innerHTML = '<li>Loading concerts...</li>';
+      try {
+        const res = await fetch('http://localhost:5000/api/concerts');
+        if (!res.ok) throw new Error('Failed to load concerts');
+        const concerts = await res.json();
+        if (concerts.length === 0) {
+          concertList.innerHTML = '<li>No upcoming concerts found.</li>';
+          return;
+        }
+        concertList.innerHTML = '';
+        concerts.forEach(concert => {
+          const li = document.createElement('li');
+          li.textContent = `${concert.name} – ${concert.date}`;
+          concertList.appendChild(li);
+        });
+      } catch (err) {
+        concertList.innerHTML = '<li class="text-red-600">Failed to load concerts. Please try again.</li>';
+      }
+    }
+
+    concertForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      formMessage.textContent = '';
+      const name = document.getElementById('name').value.trim();
+      const date = document.getElementById('date').value;
+      if (!name || !date) {
+        formMessage.textContent = 'Please provide both concert name and date.';
+        formMessage.className = 'text-red-600';
+        return;
+      }
+      try {
+        const res = await fetch('http://localhost:5000/api/concerts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, date }),
+        });
+        if (!res.ok) throw new Error('Failed to add concert');
+        formMessage.textContent = 'Concert added successfully!';
+        formMessage.className = 'text-green-600';
+        concertForm.reset();
+        fetchConcerts();
+      } catch (err) {
+        formMessage.textContent = 'Failed to add concert. Please try again.';
+        formMessage.className = 'text-red-600';
+      }
+    });
+
+    fetchConcerts();
+  </script>
+</body>
+</html>
