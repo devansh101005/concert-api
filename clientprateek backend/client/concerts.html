@@ -5,16 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Concerts - ConcertHub</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/heroicons@1.0.6/dist/heroicons.min.js"></script>
+  <style>
+    a, button {
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    }
+    button:hover, a:hover {
+      transform: scale(1.05);
+    }
+    #concertDetails {
+      transition: opacity 0.3s ease;
+    }
+    #concertDetails.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #concertDetails:not(.hidden) {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .btn-primary {
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      background-color: #1e40af;
+    }
+  </style>
 </head>
 <body class="bg-gray-100 text-gray-900 font-sans">
   <header class="bg-blue-600 text-white p-4 shadow-md">
     <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-2xl font-bold">🎶 ConcertHub</h1>
-      <nav>
-        <a href="index.html" class="px-3 py-2 hover:bg-blue-700 rounded">Home</a>
-        <a href="concerts.html" class="px-3 py-2 bg-blue-700 rounded">Concerts</a>
-        <a href="login.html" class="px-3 py-2 hover:bg-blue-700 rounded">Login</a>
-        <a href="register.html" class="px-3 py-2 hover:bg-blue-700 rounded">Register</a>
+      <h1 class="text-2xl font-bold flex items-center space-x-2">
+        <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+        <span>ConcertHub</span>
+      </h1>
+      <nav class="space-x-2">
+        <a href="index.html" class="px-3 py-2 rounded hover:bg-blue-700 transition-colors duration-300">Home</a>
+        <a href="concerts.html" class="px-3 py-2 bg-blue-700 rounded transition-colors duration-300">Concerts</a>
+        <a href="login.html" class="px-3 py-2 rounded hover:bg-blue-700 transition-colors duration-300">Login</a>
+        <a href="register.html" class="px-3 py-2 rounded hover:bg-blue-700 transition-colors duration-300">Register</a>
       </nav>
     </div>
   </header>
@@ -23,21 +53,34 @@
     <h2 class="text-3xl font-semibold mb-6">Upcoming Concerts</h2>
 
     <form id="concertForm" class="mb-6 space-y-4 max-w-md">
-      <input type="text" id="name" placeholder="Concert Name" class="w-full p-2 border border-gray-300 rounded" required />
-      <input type="date" id="date" class="w-full p-2 border border-gray-300 rounded" required />
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Concert</button>
+      <input type="text" id="name" placeholder="Concert Name" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      <input type="date" id="date" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      <input type="time" id="time" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      <button type="submit" class="btn-primary bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Concert</button>
       <p id="formMessage" class="mt-2"></p>
     </form>
 
     <ul id="concertList" class="space-y-2">
       <!-- Concert items will be appended here -->
     </ul>
+
+    <div id="concertDetails" class="mt-6 p-4 border border-gray-300 rounded max-w-md hidden">
+      <h3 class="text-xl font-semibold mb-2">Concert Details</h3>
+      <div id="detailsContent"></div>
+      <h4 class="text-lg font-semibold mt-4">Ticket Sales Summary</h4>
+      <div id="salesSummary"></div>
+      <button id="closeDetails" class="mt-4 bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">Close</button>
+    </div>
   </main>
 
   <script>
     const concertList = document.getElementById('concertList');
     const concertForm = document.getElementById('concertForm');
     const formMessage = document.getElementById('formMessage');
+    const concertDetails = document.getElementById('concertDetails');
+    const detailsContent = document.getElementById('detailsContent');
+    const salesSummary = document.getElementById('salesSummary');
+    const closeDetails = document.getElementById('closeDetails');
 
     async function fetchConcerts() {
       concertList.innerHTML = '<li>Loading concerts...</li>';
@@ -52,7 +95,12 @@
         concertList.innerHTML = '';
         concerts.forEach(concert => {
           const li = document.createElement('li');
-          li.textContent = `${concert.name} – ${concert.date}`;
+          li.textContent = `${concert.name} – ${concert.date} `;
+          const detailsBtn = document.createElement('button');
+          detailsBtn.textContent = 'View Details';
+          detailsBtn.className = 'ml-4 bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 transition-transform duration-300';
+          detailsBtn.addEventListener('click', () => showConcertDetails(concert.concert_id));
+          li.appendChild(detailsBtn);
           concertList.appendChild(li);
         });
       } catch (err) {
@@ -60,13 +108,58 @@
       }
     }
 
+    async function showConcertDetails(concertId) {
+      try {
+        const detailsRes = await fetch(`http://localhost:5000/api/concerts/${concertId}/details`);
+        if (!detailsRes.ok) throw new Error('Failed to load concert details');
+        const details = await detailsRes.json();
+
+        const salesRes = await fetch(`http://localhost:5000/api/concerts/${concertId}/sales-summary`);
+        if (!salesRes.ok) throw new Error('Failed to load sales summary');
+        const sales = await salesRes.json();
+
+        detailsContent.innerHTML = '';
+        if (details.length === 0) {
+          detailsContent.textContent = 'No details available.';
+        } else {
+          const concertInfo = details[0];
+          detailsContent.innerHTML = `
+            <p><strong>Name:</strong> ${concertInfo.name}</p>
+            <p><strong>Date:</strong> ${concertInfo.date}</p>
+            <p><strong>Time:</strong> ${concertInfo.time}</p>
+            <p><strong>Venue:</strong> ${concertInfo.venue_name}, ${concertInfo.venue_city}</p>
+            <h4 class="mt-2 font-semibold">Performers:</h4>
+          `;
+          details.forEach(d => {
+            detailsContent.innerHTML += `
+              <p>${d.artist_first_name} ${d.artist_last_name} (${d.artist_genre}) at ${d.performance_time}</p>
+            `;
+          });
+        }
+
+        salesSummary.innerHTML = `
+          <p><strong>Total Tickets Sold:</strong> ${sales.total_tickets}</p>
+          <p><strong>Total Revenue:</strong> $${sales.total_revenue}</p>
+        `;
+
+        concertDetails.classList.remove('hidden');
+      } catch (err) {
+        alert('Failed to load concert details or sales summary.');
+      }
+    }
+
+    closeDetails.addEventListener('click', () => {
+      concertDetails.classList.add('hidden');
+    });
+
     concertForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       formMessage.textContent = '';
       const name = document.getElementById('name').value.trim();
       const date = document.getElementById('date').value;
-      if (!name || !date) {
-        formMessage.textContent = 'Please provide both concert name and date.';
+      const time = document.getElementById('time').value;
+      if (!name || !date || !time) {
+        formMessage.textContent = 'Please provide concert name, date, and time.';
         formMessage.className = 'text-red-600';
         return;
       }
@@ -74,7 +167,7 @@
         const res = await fetch('http://localhost:5000/api/concerts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, date }),
+          body: JSON.stringify({ name, date, time }),
         });
         if (!res.ok) throw new Error('Failed to add concert');
         formMessage.textContent = 'Concert added successfully!';
