@@ -1,4 +1,3 @@
-// routes/concerts.js
 const express = require('express');
 const router  = express.Router();
 const pool    = require('../db');
@@ -78,58 +77,86 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/concerts - add a new concert
+// POST /api/concerts - add a new concert using stored procedure
 router.post('/', async (req, res) => {
-  const { name, date } = req.body;
-  if (!name || !date) {
-    return res.status(400).json({ error: 'Name and date are required' });
+  const { name, date, time, venue_id, organizer_id, spons_id } = req.body;
+  console.log('POST /api/concerts body:', req.body);
+  if (!name || !date || !time) {
+    return res.status(400).json({ error: 'Name, date, and time are required' });
   }
   try {
-    const insertQuery = `
-      INSERT INTO concert (name, date)
-      VALUES ($1, $2)
-      RETURNING concert_id, name, date;
-    `;
-    const { rows } = await pool.query(insertQuery, [name, date]);
-    res.status(201).json(rows[0]);
+    const result = await pool.query(
+      `CALL add_concert($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [name, date, time, venue_id || null, organizer_id || null, spons_id || null, null, null]
+    );
+    console.log('Stored procedure call result:', result);
+    res.status(201).json({ message: 'Concert added successfully', concert: { name, date, time, venue_id, organizer_id, spons_id } });
   } catch (err) {
-    console.error(err);
+    console.error('Error in POST /api/concerts:', err);
     res.status(500).json({ error: 'Failed to add concert', details: err.message });
   }
 });
 
-module.exports = router;
-
-
-
 // GET /api/concerts/:id
 router.get('/:id', async (req, res) => {
-    const id = parseInt(req.params.id);
-    try {
-      const concertQ = `
-        SELECT c.concert_id, c.name, c.date, c.time,
-               v.name AS venue, v.city
-        FROM concert c
-        JOIN venue v ON c.venue_id = v.venue_id
-        WHERE c.concert_id = $1;
-      `;
-      const concertR = await pool.query(concertQ, [id]);
-      if (!concertR.rows.length)
-        return res.status(404).json({ error: 'Not found' });
-  
-      const perfQ = `
-        SELECT a.artist_id, a.first_name, a.last_name, a.genre, p.performance_time
-        FROM performs p
-        JOIN artist a ON p.artist_id = a.artist_id
-        WHERE p.concert_id = $1
-        ORDER BY p.performance_time;
-      `;
-      const perfR = await pool.query(perfQ, [id]);
-  
-      res.json({ concert: concertR.rows[0], performers: perfR.rows });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Server error', details: err.message });
-    }
-  });
-  
+  const id = parseInt(req.params.id);
+  try {
+    const concertQ = `
+      SELECT c.concert_id, c.name, c.date, c.time,
+             v.name AS venue, v.city
+      FROM concert c
+      JOIN venue v ON c.venue_id = v.venue_id
+      WHERE c.concert_id = $1;
+    `;
+    const concertR = await pool.query(concertQ, [id]);
+    if (!concertR.rows.length)
+      return res.status(404).json({ error: 'Not found' });
+
+    const perfQ = `
+      SELECT a.artist_id, a.first_name, a.last_name, a.genre, p.performance_time
+      FROM performs p
+      JOIN artist a ON p.artist_id = a.artist_id
+      WHERE p.concert_id = $1
+      ORDER BY p.performance_time;
+    `;
+    const perfR = await pool.query(perfQ, [id]);
+
+    res.json({ concert: concertR.rows[0], performers: perfR.rows });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error', details: err.message });
+  }
+});
+
+
+module.exports = router;
+
+// GET /api/concerts/:id/details - get concert details with performers and venue
+router.get('/:id/details', async (req, res) => {
+  const concertId = parseInt(req.params.id);
+  if (isNaN(concertId)) {
+    return res.status(400).json({ error: 'Invalid concert ID' });
+  }
+  try {
+    const { rows } = await pool.query('SELECT * FROM get_concert_details($1)', [concertId]);
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to get concert details' });
+  }
+});
+
+// GET /api/concerts/:id/sales-summary - get ticket sales summary for a concert
+router.get('/:id/sales-summary', async (req, res) => {
+  const concertId = parseInt(req.params.id);
+  if (isNaN(concertId)) {
+    return res.status(400).json({ error: 'Invalid concert ID' });
+  }
+  try {
+    const { rows } = await pool.query('SELECT * FROM get_ticket_sales_summary($1)', [concertId]);
+    res.json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to get ticket sales summary' });
+  }
+});

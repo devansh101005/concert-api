@@ -1,60 +1,39 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const pool = require("../db");
 
 const router = express.Router();
-
-// Mock user database
-const users = [];
 
 // JWT Secret Key
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
-// Signup Route
-router.post("/signup", async (req, res) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-    return res.status(400).json({ error: "Username and password are required" });
-  }
-
-  // Check if user already exists
-  const existingUser = users.find((user) => user.username === username);
-  if (existingUser) {
-    return res.status(400).json({ error: "User already exists" });
-  }
-
-  // Hash the password
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  // Save user to the database
-  users.push({ username, password: hashedPassword });
-  res.status(201).json({ message: "User created successfully" });
-});
-
 // Login Route
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ error: "Username and password are required" });
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
   }
 
-  // Find user in the database
-  const user = users.find((user) => user.username === username);
-  if (!user) {
-    return res.status(400).json({ error: "Invalid username or password" });
-  }
+  try {
+    const result = await pool.query("SELECT * FROM buyer WHERE email_id = $1", [email]);
+    if (result.rows.length === 0) {
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
+    const user = result.rows[0];
 
-  // Compare password
-  const isPasswordValid = await bcrypt.compare(password, user.password);
-  if (!isPasswordValid) {
-    return res.status(400).json({ error: "Invalid username or password" });
-  }
+    // For now, assuming password stored in plaintext (as per data.sql)
+    if (user.password !== password) {
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
 
-  // Generate JWT
-  const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: "1h" });
-  res.json({ message: "Login successful", token });
+    // Generate JWT with buyerId
+    const token = jwt.sign({ buyerId: user.buyer_id }, JWT_SECRET, { expiresIn: "1h" });
+    res.json({ message: "Login successful", token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 // Logout Route

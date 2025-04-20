@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sponsors - ConcertHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans">
+  <header class="bg-blue-600 text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">🎶 ConcertHub</h1>
+      <nav>
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-700 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-700 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 bg-blue-700 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-700 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-700 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-700 rounded">Tickets</a>
+        <a href="login.html" class="px-3 py-2 hover:bg-blue-700 rounded">Login</a>
+        <a href="register.html" class="px-3 py-2 hover:bg-blue-700 rounded">Register</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-6">
+    <h2 class="text-3xl font-semibold mb-6">Sponsors</h2>
+
+    <form id="sponsorForm" class="mb-6 space-y-4 max-w-md">
+      <input type="text" id="name" placeholder="Sponsor Name" class="w-full p-2 border border-gray-300 rounded" required />
+      <input type="number" id="amount" placeholder="Sponsorship Amount" class="w-full p-2 border border-gray-300 rounded" required />
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Sponsor</button>
+      <p id="formMessage" class="mt-2"></p>
+    </form>
+
+    <ul id="sponsorList" class="space-y-2">
+      <!-- Sponsor items will be appended here -->
+    </ul>
+  </main>
+
+  <script>
+    const sponsorList = document.getElementById('sponsorList');
+    const sponsorForm = document.getElementById('sponsorForm');
+    const formMessage = document.getElementById('formMessage');
+
+    async function fetchSponsors() {
+      sponsorList.innerHTML = '<li>Loading sponsors...</li>';
+      try {
+        const res = await fetch('http://localhost:5000/api/sponsors');
+        if (!res.ok) throw new Error('Failed to load sponsors');
+        const sponsors = await res.json();
+        if (sponsors.length === 0) {
+          sponsorList.innerHTML = '<li>No sponsors found.</li>';
+          return;
+        }
+        sponsorList.innerHTML = '';
+        sponsors.forEach(sponsor => {
+          const li = document.createElement('li');
+          li.textContent = `${sponsor.name} – $${sponsor.spons_amount}`;
+          sponsorList.appendChild(li);
+        });
+      } catch (err) {
+        sponsorList.innerHTML = '<li class="text-red-600">Failed to load sponsors. Please try again.</li>';
+      }
+    }
+
+    sponsorForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      formMessage.textContent = '';
+      const name = document.getElementById('name').value.trim();
+      const amount = parseFloat(document.getElementById('amount').value);
+      if (!name || isNaN(amount)) {
+        formMessage.textContent = 'Please provide valid sponsor name and amount.';
+        formMessage.className = 'text-red-600';
+        return;
+      }
+      try {
+        const res = await fetch('http://localhost:5000/api/sponsors', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, spons_amount: amount }),
+        });
+        if (!res.ok) throw new Error('Failed to add sponsor');
+        formMessage.textContent = 'Sponsor added successfully!';
+        formMessage.className = 'text-green-600';
+        sponsorForm.reset();
+        fetchSponsors();
+      } catch (err) {
+        formMessage.textContent = 'Failed to add sponsor. Please try again.';
+        formMessage.className = 'text-red-600';
+      }
+    });
+
+    fetchSponsors();
+  </script>
+</body>
+</html>

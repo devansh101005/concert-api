@@ -8,7 +8,8 @@ const port = process.env.PORT || 5000;
 const setupTriggers = require('./db/setupTriggers');
 
 app.use(cors({
-  origin: 'http://localhost:3000', // frontend origin
+  origin: '*', // allow all origins for testing
+  //origin: 'http://localhost:3000', // frontend origin
   credentials: true,
 }));
 app.use(express.json());
