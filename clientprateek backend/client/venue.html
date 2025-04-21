@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Venues</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    form { margin-top: 20px; }
+    label { display: block; margin-top: 10px; }
+    input[type="text"], input[type="number"] { width: 300px; padding: 5px; }
+    button { margin-top: 10px; padding: 8px 12px; }
+  </style>
+</head>
+<body>
+  <h1>Venues</h1>
+
+  <table id="venuesTable">
+    <thead>
+      <tr>
+        <th>Venue ID</th>
+        <th>Name</th>
+        <th>Street</th>
+        <th>City</th>
+        <th>Pin Code</th>
+        <th>Capacity</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Add New Venue</h2>
+  <form id="venueForm">
+    <label>Name: <input type="text" id="name" required /></label>
+    <label>Street: <input type="text" id="street" /></label>
+    <label>City: <input type="text" id="city" /></label>
+    <label>Pin Code: <input type="number" id="pinCode" /></label>
+    <label>Capacity: <input type="number" id="capacity" required /></label>
+    <button type="submit">Add Venue</button>
+  </form>
+
+  <script>
+    async function fetchVenues() {
+      try {
+        const res = await fetch('/api/venues');
+        if (!res.ok) throw new Error('Failed to fetch venues');
+        const venues = await res.json();
+        const tbody = document.querySelector('#venuesTable tbody');
+        tbody.innerHTML = '';
+        venues.forEach(venue => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = 
+            '<td>' + venue.venue_id + '</td>' +
+            '<td>' + venue.name + '</td>' +
+            '<td>' + (venue.street || '') + '</td>' +
+            '<td>' + (venue.city || '') + '</td>' +
+            '<td>' + (venue.pin_code || '') + '</td>' +
+            '<td>' + venue.capacity + '</td>';
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    document.getElementById('venueForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const street = document.getElementById('street').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const pinCode = document.getElementById('pinCode').value.trim();
+      const capacity = document.getElementById('capacity').value.trim();
+
+      try {
+        const res = await fetch('/api/venues', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, street, city, pin_code: pinCode ? parseInt(pinCode) : null, capacity: parseInt(capacity) })
+        });
+        if (!res.ok) throw new Error('Failed to add venue');
+        alert('Venue added successfully');
+        e.target.reset();
+        fetchVenues();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    fetchVenues();
+  </script>
+</body>
+</html>

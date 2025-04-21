@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Artists</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    form { margin-top: 20px; }
+    label { display: block; margin-top: 10px; }
+    input[type="text"] { width: 300px; padding: 5px; }
+    button { margin-top: 10px; padding: 8px 12px; }
+  </style>
+</head>
+<body>
+  <h1>Artists</h1>
+
+  <table id="artistsTable">
+    <thead>
+      <tr>
+        <th>Artist ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Genre</th>
+        <th>Contact Info</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Add New Artist</h2>
+  <form id="artistForm">
+    <label>First Name: <input type="text" id="firstName" required /></label>
+    <label>Last Name: <input type="text" id="lastName" required /></label>
+    <label>Genre: <input type="text" id="genre" /></label>
+    <label>Contact Info: <input type="text" id="contactInfo" /></label>
+    <button type="submit">Add Artist</button>
+  </form>
+
+  <script>
+    async function fetchArtists() {
+      try {
+        const res = await fetch('/api/artists');
+        if (!res.ok) throw new Error('Failed to fetch artists');
+        const artists = await res.json();
+        const tbody = document.querySelector('#artistsTable tbody');
+        tbody.innerHTML = '';
+        artists.forEach(artist => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = \`
+            <td>\${artist.artist_id}</td>
+            <td>\${artist.first_name}</td>
+            <td>\${artist.last_name}</td>
+            <td>\${artist.genre || ''}</td>
+            <td>\${artist.contact_info || ''}</td>
+          \`;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    document.getElementById('artistForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const genre = document.getElementById('genre').value.trim();
+      const contactInfo = document.getElementById('contactInfo').value.trim();
+
+      try {
+        const res = await fetch('/api/artists', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ first_name: firstName, last_name: lastName, genre, contact_info: contactInfo })
+        });
+        if (!res.ok) throw new Error('Failed to add artist');
+        alert('Artist added successfully');
+        e.target.reset();
+        fetchArtists();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    fetchArtists();
+  </script>
+</body>
+</html>
