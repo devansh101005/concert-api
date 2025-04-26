@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ConcertHub - Book Your Next Musical Experience</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .hero-section {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+      background-size: cover;
+      background-position: center;
+      height: 600px;
+    }
+    .concert-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    .concert-card {
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center">
+        <i class="fas fa-music text-2xl mr-2"></i>
+        <h1 class="text-2xl font-bold">ConcertHub</h1>
+      </div>
+      <nav class="hidden md:block">
+        <a href="index.html" class="px-3 py-2 bg-blue-700 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-700 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-700 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-700 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-700 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-700 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-700 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-700 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-700 rounded">Venue</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobileMenuButton" class="text-white focus:outline-none">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-blue-700 mt-2 p-4 rounded-lg">
+      <div class="flex flex-col space-y-2">
+        <a href="index.html" class="px-3 py-2 bg-blue-800 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-800 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-800 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-800 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-800 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-800 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-800 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-800 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-800 rounded">Venue</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section flex items-center justify-center text-white">
+    <div class="container mx-auto text-center px-4">
+      <h1 class="text-5xl md:text-6xl font-bold mb-6">Experience the Magic of Live Music</h1>
+      <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto">Discover and book tickets for the hottest concerts and music events happening near you.</p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="concerts.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105">
+          Browse Concerts
+        </a>
+        <a href="register.html" class="bg-transparent hover:bg-white hover:text-blue-700 text-white font-bold py-3 px-8 border-2 border-white rounded-full text-lg transition duration-300 transform hover:scale-105">
+          Sign Up Now
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Concerts Section -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Featured Concerts</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">Don't miss out on these amazing performances. Book your tickets now before they sell out!</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="featuredConcerts">
+        <!-- Featured concerts will be loaded dynamically -->
+        <!-- Placeholder cards until data loads -->
+        <div class="concert-card bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="h-48 bg-gray-200 animate-pulse"></div>
+          <div class="p-6">
+            <div class="h-6 bg-gray-200 rounded animate-pulse mb-4"></div>
+            <div class="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+            <div class="h-4 bg-gray-200 rounded animate-pulse mb-4 w-2/3"></div>
+            <div class="h-10 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+        </div>
+        <div class="concert-card bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="h-48 bg-gray-200 animate-pulse"></div>
+          <div class="p-6">
+            <div class="h-6 bg-gray-200 rounded animate-pulse mb-4"></div>
+            <div class="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+            <div class="h-4 bg-gray-200 rounded animate-pulse mb-4 w-2/3"></div>
+            <div class="h-10 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+        </div>
+        <div class="concert-card bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="h-48 bg-gray-200 animate-pulse"></div>
+          <div class="p-6">
+            <div class="h-6 bg-gray-200 rounded animate-pulse mb-4"></div>
+            <div class="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+            <div class="h-4 bg-gray-200 rounded animate-pulse mb-4 w-2/3"></div>
+            <div class="h-10 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-12">
+        <a href="concerts.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300">
+          View All Concerts
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="py-16 bg-gray-100">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">Booking your next concert experience is easy with ConcertHub</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div class="text-center p-6">
+          <div class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">1</div>
+          <h3 class="text-xl font-semibold mb-3">Browse Concerts</h3>
+          <p class="text-gray-600">Explore our extensive list of upcoming concerts and events in your area.</p>
+        </div>
+        
+        <div class="text-center p-6">
+          <div class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">2</div>
+          <h3 class="text-xl font-semibold mb-3">Select Your Seats</h3>
+          <p class="text-gray-600">Choose your preferred seats and the number of tickets you want to purchase.</p>
+        </div>
+        
+        <div class="text-center p-6">
+          <div class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">3</div>
+          <h3 class="text-xl font-semibold mb-3">Secure Payment</h3>
+          <p class="text-gray-600">Complete your purchase with our secure payment system and get ready for the show!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">What Our Customers Say</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">Join thousands of satisfied music lovers who have booked their concert experiences through ConcertHub</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+          <div class="flex items-center mb-4">
+            <div class="text-yellow-400 flex">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+          </div>
+          <p class="text-gray-600 mb-4">"ConcertHub made it so easy to find and book tickets for my favorite band. The process was smooth and the seats were exactly as described!"</p>
+          <div class="font-semibold">Sarah Johnson</div>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+          <div class="flex items-center mb-4">
+            <div class="text-yellow-400 flex">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+          </div>
+          <p class="text-gray-600 mb-4">"I've been using ConcertHub for all my concert needs. Their selection is amazing and the booking process is quick and hassle-free."</p>
+          <div class="font-semibold">Michael Rodriguez</div>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+          <div class="flex items-center mb-4">
+            <div class="text-yellow-400 flex">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+          <p class="text-gray-600 mb-4">"Great service and excellent customer support. When I had questions about my booking, they were quick to respond and very helpful."</p>
+          <div class="font-semibold">Emily Chen</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action Section -->
+  <section class="py-16 bg-blue-600 text-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Experience Live Music?</h2>
+      <p class="text-xl mb-8 max-w-3xl mx-auto">Join ConcertHub today and never miss another concert. Sign up for free and start booking your tickets!</p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="register.html" class="bg-white text-blue-600 hover:bg-gray-100 font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105">
+          Create Account
+        </a>
+        <a href="login.html" class="bg-transparent hover:bg-blue-700 text-white font-bold py-3 px-8 border-2 border-white rounded-full text-lg transition duration-300">
+          Login
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-semibold mb-4">ConcertHub</h3>
+          <p class="text-gray-400">Your one-stop platform to discover and book tickets for the best concerts and music events.</p>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="concerts.html" class="text-gray-400 hover:text-white transition">Concerts</a></li>
+            <li><a href="artist.html" class="text-gray-400 hover:text-white transition">Artists</a></li>
+            <li><a href="Venue.html" class="text-gray-400 hover:text-white transition">Venues</a></li>
+            <li><a href="tickets.html" class="text-gray-400 hover:text-white transition">Tickets</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Support</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">FAQs</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Connect With Us</h3>
+          <div class="flex space-x-4 mb-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
+          </div>
+          <p class="text-gray-400">Subscribe to our newsletter for updates on upcoming concerts and exclusive offers.</p>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2025 ConcertHub. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobileMenuButton').addEventListener('click', function() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Fetch and display featured concerts
+    async function fetchFeaturedConcerts() {
+      try {
+        const res = await fetch('http://localhost:5000/api/concerts');
+        if (!res.ok) throw new Error('Failed to fetch concerts');
+        
+        const concerts = await res.json();
+        const featuredConcertsContainer = document.getElementById('featuredConcerts');
+        
+        // Clear loading placeholders
+        featuredConcertsContainer.innerHTML = '';
+        
+        // Display up to 3 concerts
+        const concertsToShow = concerts.slice(0, 3);
+        
+        if (concertsToShow.length === 0) {
+          featuredConcertsContainer.innerHTML = '<div class="col-span-3 text-center text-gray-500">No concerts available at the moment. Check back soon!</div>';
+          return;
+        }
+        
+        // Concert images (placeholders since we don't have actual images)
+        const concertImages = [
+          'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+          'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+          'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'
+        ];
+        
+        concertsToShow.forEach((concert, index) => {
+          const concertCard = document.createElement('div');
+          concertCard.className = 'concert-card bg-white rounded-xl shadow-lg overflow-hidden';
+          
+          concertCard.innerHTML = `
+            <div class="h-48 bg-cover bg-center" style="background-image: url('${concertImages[index % concertImages.length]}')"></div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">${concert.name}</h3>
+              <p class="text-gray-600 mb-4">${concert.date} at ${concert.time || '8:00 PM'}</p>
+              <a href="concerts.html" class="block text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-300">
+                View Details
+              </a>
+            </div>
+          `;
+          
+          featuredConcertsContainer.appendChild(concertCard);
+        });
+        
+      } catch (err) {
+        console.error('Error fetching concerts:', err);
+        document.getElementById('featuredConcerts').innerHTML = 
+          '<div class="col-span-3 text-center text-red-500">Failed to load concerts. Please try again later.</div>';
+      }
+    }
+
+    // Load featured concerts when page loads
+    window.addEventListener('load', fetchFeaturedConcerts);
+  </script>
+
+</body>
+</html>

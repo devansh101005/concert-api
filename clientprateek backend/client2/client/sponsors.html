@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sponsors - ConcertHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .hero-section {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1560523159-4a9692d222f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+      background-size: cover;
+      background-position: center;
+      height: 300px;
+    }
+    .sponsor-card {
+      transition: all 0.3s ease;
+    }
+    .sponsor-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    .btn-primary {
+      @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300;
+    }
+    .form-input {
+      @apply w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
+    }
+    .form-label {
+      @apply block text-sm font-medium text-gray-700 mb-1;
+    }
+    .sponsor-tier-platinum {
+      background: linear-gradient(135deg, #e5e5e5 0%, #b3b3b3 100%);
+    }
+    .sponsor-tier-gold {
+      background: linear-gradient(135deg, #ffd700 0%, #ffcc00 100%);
+    }
+    .sponsor-tier-silver {
+      background: linear-gradient(135deg, #c0c0c0 0%, #a9a9a9 100%);
+    }
+    .sponsor-tier-bronze {
+      background: linear-gradient(135deg, #cd7f32 0%, #b87333 100%);
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center">
+        <i class="fas fa-music text-2xl mr-2"></i>
+        <h1 class="text-2xl font-bold">ConcertHub</h1>
+      </div>
+      <nav class="hidden md:block">
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-700 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-700 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 bg-blue-700 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-700 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-700 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-700 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-700 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-700 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-700 rounded">Venue</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobileMenuButton" class="text-white focus:outline-none">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-blue-700 mt-2 p-4 rounded-lg">
+      <div class="flex flex-col space-y-2">
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-800 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-800 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 bg-blue-800 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-800 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-800 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-800 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-800 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-800 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-800 rounded">Venue</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section flex items-center justify-center text-white">
+    <div class="container mx-auto text-center px-4">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Our Valued Sponsors</h1>
+      <p class="text-lg md:text-xl mb-6 max-w-2xl mx-auto">Meet the organizations that make our concerts possible through their generous support and partnership.</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Left Column - Sponsor Form -->
+      <div class="lg:col-span-1 order-2 lg:order-1">
+        <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+          <h2 class="text-2xl font-bold mb-6 text-blue-700 flex items-center">
+            <i class="fas fa-handshake mr-2"></i>Become a Sponsor
+          </h2>
+          <form id="sponsorForm" class="space-y-4">
+            <div>
+              <label for="name" class="form-label">Sponsor Name</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-building"></i>
+                </span>
+                <input type="text" id="name" placeholder="Enter organization name" class="form-input rounded-l-none" required />
+              </div>
+            </div>
+            
+            <div>
+              <label for="amount" class="form-label">Sponsorship Amount ($)</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-dollar-sign"></i>
+                </span>
+                <input type="number" id="amount" placeholder="Enter sponsorship amount" class="form-input rounded-l-none" required />
+              </div>
+              <div class="mt-2 text-sm text-gray-500">
+                <p><i class="fas fa-medal text-yellow-600 mr-1"></i> Gold Tier: $10,000+</p>
+                <p><i class="fas fa-medal text-gray-400 mr-1"></i> Silver Tier: $5,000+</p>
+                <p><i class="fas fa-medal text-yellow-800 mr-1"></i> Bronze Tier: $1,000+</p>
+              </div>
+            </div>
+            
+            <div>
+              <label for="contactPerson" class="form-label">Contact Person</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-user"></i>
+                </span>
+                <input type="text" id="contactPerson" placeholder="Enter contact person name" class="form-input rounded-l-none" />
+              </div>
+            </div>
+            
+            <div>
+              <label for="contactEmail" class="form-label">Contact Email</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-envelope"></i>
+                </span>
+                <input type="email" id="contactEmail" placeholder="Enter contact email" class="form-input rounded-l-none" />
+              </div>
+            </div>
+            
+            <button type="submit" class="w-full btn-primary flex items-center justify-center py-3">
+              <i class="fas fa-plus-circle mr-2"></i>Add Sponsor
+            </button>
+            <p id="formMessage" class="mt-2 text-center"></p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Column - Sponsors List -->
+      <div class="lg:col-span-2 order-1 lg:order-2">
+        <h2 class="text-3xl font-bold mb-6 text-blue-700 flex items-center">
+          <i class="fas fa-star mr-2"></i>Current Sponsors
+        </h2>
+        
+        <!-- Sponsors Grid -->
+        <div id="sponsorGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <!-- Loading placeholders -->
+          <div class="sponsor-card bg-white rounded-xl shadow-md p-4 animate-pulse">
+            <div class="h-4 bg-gray-200 rounded w-3/4 mb-3"></div>
+            <div class="h-3 bg-gray-200 rounded w-1/2 mb-4"></div>
+            <div class="h-8 bg-gray-200 rounded w-full"></div>
+          </div>
+          <div class="sponsor-card bg-white rounded-xl shadow-md p-4 animate-pulse">
+            <div class="h-4 bg-gray-200 rounded w-3/4 mb-3"></div>
+            <div class="h-3 bg-gray-200 rounded w-1/2 mb-4"></div>
+            <div class="h-8 bg-gray-200 rounded w-full"></div>
+          </div>
+        </div>
+        
+        <!-- Sponsors List -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="p-4 bg-blue-50 border-b border-blue-100">
+            <h3 class="text-xl font-semibold text-blue-700 flex items-center">
+              <i class="fas fa-list mr-2"></i>All Sponsors
+            </h3>
+          </div>
+          <ul id="sponsorList" class="divide-y divide-gray-200">
+            <!-- Sponsor items will be appended here -->
+          </ul>
+          <div id="listMessage" class="p-8 text-center hidden">
+            <!-- Will show messages when list is empty or loading -->
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Sponsorship Benefits Section -->
+    <section class="mt-16">
+      <h2 class="text-3xl font-bold mb-8 text-center text-blue-700">Sponsorship Benefits</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-bullhorn text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">Brand Visibility</h3>
+          <p class="text-gray-600">Your brand will be prominently displayed at our events, on our website, and in all promotional materials.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-ticket-alt text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">VIP Access</h3>
+          <p class="text-gray-600">Receive complimentary VIP tickets to our concerts and exclusive backstage access to meet the artists.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-handshake text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">Networking Opportunities</h3>
+          <p class="text-gray-600">Connect with other sponsors, artists, and industry professionals at our exclusive networking events.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-semibold mb-4">ConcertHub</h3>
+          <p class="text-gray-400">Your one-stop platform to discover and book tickets for the best concerts and music events.</p>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="concerts.html" class="text-gray-400 hover:text-white transition">Concerts</a></li>
+            <li><a href="artist.html" class="text-gray-400 hover:text-white transition">Artists</a></li>
+            <li><a href="Venue.html" class="text-gray-400 hover:text-white transition">Venues</a></li>
+            <li><a href="tickets.html" class="text-gray-400 hover:text-white transition">Tickets</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Support</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">FAQs</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Connect With Us</h3>
+          <div class="flex space-x-4 mb-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
+          </div>
+          <p class="text-gray-400">Subscribe to our newsletter for updates on upcoming concerts and exclusive offers.</p>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2025 ConcertHub. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobileMenuButton').addEventListener('click', function() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    const sponsorList = document.getElementById('sponsorList');
+    const sponsorGrid = document.getElementById('sponsorGrid');
+    const listMessage = document.getElementById('listMessage');
+    const sponsorForm = document.getElementById('sponsorForm');
+    const formMessage = document.getElementById('formMessage');
+    
+    // Company logos (placeholders)
+    const companyLogos = [
+      'https://via.placeholder.com/150?text=Sponsor',
+      'https://via.placeholder.com/150?text=Partner',
+      'https://via.placeholder.com/150?text=Supporter',
+      'https://via.placeholder.com/150?text=Backer'
+    ];
+
+    // Determine sponsor tier based on amount
+    function getSponsorTier(amount) {
+      if (amount >= 20000) return { tier: 'Platinum', class: 'sponsor-tier-platinum', icon: 'fas fa-award' };
+      if (amount >= 10000) return { tier: 'Gold', class: 'sponsor-tier-gold', icon: 'fas fa-medal' };
+      if (amount >= 5000) return { tier: 'Silver', class: 'sponsor-tier-silver', icon: 'fas fa-medal' };
+      if (amount >= 1000) return { tier: 'Bronze', class: 'sponsor-tier-bronze', icon: 'fas fa-medal' };
+      return { tier: 'Supporter', class: 'bg-blue-100', icon: 'fas fa-handshake' };
+    }
+
+    async function fetchSponsors() {
+      try {
+        const res = await fetch('http://localhost:5000/api/sponsors');
+        if (!res.ok) throw new Error('Failed to load sponsors');
+        const sponsors = await res.json();
+        
+        // Clear loading placeholders
+        sponsorList.innerHTML = '';
+        sponsorGrid.innerHTML = '';
+        
+        if (sponsors.length === 0) {
+          // Show empty message
+          listMessage.innerHTML = `
+            <div class="flex flex-col items-center justify-center">
+              <i class="fas fa-handshake-slash text-gray-400 text-5xl mb-4"></i>
+              <p class="text-gray-500 text-lg">No sponsors found.</p>
+              <p class="text-gray-500">Be the first to sponsor our events!</p>
+            </div>
+          `;
+          listMessage.classList.remove('hidden');
+        } else {
+          listMessage.classList.add('hidden');
+          
+          // Sort sponsors by amount (highest first)
+          sponsors.sort((a, b) => b.spons_amount - a.spons_amount);
+          
+          // Populate list
+          sponsors.forEach(sponsor => {
+            const tierInfo = getSponsorTier(sponsor.spons_amount);
+            const li = document.createElement('li');
+            li.className = 'p-4 hover:bg-gray-50 transition';
+            li.innerHTML = `
+              <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                  <i class="${tierInfo.icon} text-blue-600 mr-3"></i>
+                  <div>
+                    <p class="font-semibold">${sponsor.name}</p>
+                    <p class="text-sm text-gray-500">$${sponsor.spons_amount.toLocaleString()}</p>
+                  </div>
+                </div>
+                <span class="px-3 py-1 text-xs font-semibold rounded-full ${tierInfo.class} text-gray-800">
+                  ${tierInfo.tier}
+                </span>
+              </div>
+            `;
+            sponsorList.appendChild(li);
+          });
+          
+          // Populate grid (top sponsors - show up to 4)
+          const topSponsors = sponsors.slice(0, 4);
+          topSponsors.forEach((sponsor, index) => {
+            const tierInfo = getSponsorTier(sponsor.spons_amount);
+            const card = document.createElement('div');
+            card.className = 'sponsor-card bg-white rounded-xl shadow-md overflow-hidden';
+            
+            card.innerHTML = `
+              <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-xl font-bold">${sponsor.name}</h3>
+                  <span class="px-3 py-1 text-xs font-semibold rounded-full ${tierInfo.class} text-gray-800">
+                    ${tierInfo.tier}
+                  </span>
+                </div>
+                <div class="flex items-center justify-center mb-4">
+                  <img src="${companyLogos[index % companyLogos.length]}" alt="${sponsor.name}" class="h-20">
+                </div>
+                <div class="text-center">
+                  <p class="text-2xl font-bold text-blue-600">$${sponsor.spons_amount.toLocaleString()}</p>
+                  <p class="text-sm text-gray-500">Sponsorship Amount</p>
+                </div>
+              </div>
+            `;
+            
+            sponsorGrid.appendChild(card);
+          });
+        }
+      } catch (err) {
+        // Show error message
+        listMessage.innerHTML = `
+          <div class="flex flex-col items-center justify-center">
+            <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
+            <p class="text-red-500 text-lg">Failed to load sponsors.</p>
+            <p class="text-gray-500">Please try again later or check your connection.</p>
+          </div>
+        `;
+        listMessage.classList.remove('hidden');
+      }
+    }
+
+    sponsorForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      formMessage.textContent = '';
+      
+      const name = document.getElementById('name').value.trim();
+      const amount = parseFloat(document.getElementById('amount').value);
+      const contactPerson = document.getElementById('contactPerson')?.value.trim() || '';
+      const contactEmail = document.getElementById('contactEmail')?.value.trim() || '';
+      
+      if (!name || isNaN(amount)) {
+        formMessage.innerHTML = '<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>Please provide valid sponsor name and amount.';
+        formMessage.className = 'text-red-600 text-center';
+        return;
+      }
+
+      try {
+        // Show loading state
+        const submitBtn = sponsorForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+        submitBtn.disabled = true;
+        
+        const res = await fetch('http://localhost:5000/api/sponsors', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            name, 
+            spons_amount: amount,
+            contact_person: contactPerson,
+            contact_email: contactEmail
+          }),
+        });
+        
+        // Restore button state
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        
+        if (!res.ok) throw new Error('Failed to add sponsor');
+        
+        // Show success message
+        formMessage.innerHTML = '<i class="fas fa-check-circle text-green-600 mr-1"></i>Sponsor added successfully!';
+        formMessage.className = 'text-green-600 text-center';
+        
+        // Reset form
+        sponsorForm.reset();
+        
+        // Refresh sponsors list
+        fetchSponsors();
+      } catch (err) {
+        formMessage.innerHTML = '<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>Failed to add sponsor. Please try again.';
+        formMessage.className = 'text-red-600 text-center';
+      }
+    });
+
+    // Initial fetch of sponsors
+    fetchSponsors();
+  </script>
+
+</body>
+</html>

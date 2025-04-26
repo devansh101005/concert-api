@@ -18,3 +18,6 @@ ALTER TABLE buyer ADD CONSTRAINT buyer_pkey PRIMARY KEY (buyer_id);
 
 -- Recreate foreign key constraint on ticket.buyer_id
 ALTER TABLE ticket ADD CONSTRAINT ticket_buyer_id_fkey FOREIGN KEY (buyer_id) REFERENCES buyer(buyer_id);
+
+-- Reset the sequence to start from a value higher than any existing buyer_id
+SELECT setval('buyer_buyer_id_seq', (SELECT COALESCE(MAX(buyer_id), 0) FROM buyer));

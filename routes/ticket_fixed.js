@@ -90,17 +90,14 @@ router.post('/', async (req, res) => {
       const maxBuyerIdResult = await pool.query(maxBuyerIdQuery);
       const nextBuyerId = (maxBuyerIdResult.rows[0].max || 0) + 1;
       
-      // Add a default password for new buyers
-      const defaultPassword = 'defaultpassword';
-      
       const insertBuyerQuery = `
-        INSERT INTO buyer (buyer_id, first_name, last_name, email_id, phone_no, password)
-        VALUES ($1, $2, $3, $4, $5, $6)
+        INSERT INTO buyer (buyer_id, first_name, last_name, email_id, phone_no)
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING buyer_id
       `;
       const insertBuyerResult = await pool.query(
         insertBuyerQuery, 
-        [nextBuyerId, buyerFirstName, buyerLastName, buyerEmail, buyerPhone, defaultPassword]
+        [nextBuyerId, buyerFirstName, buyerLastName, buyerEmail, buyerPhone]
       );
       buyerId = insertBuyerResult.rows[0].buyer_id;
     }

@@ -31,7 +31,6 @@ router.get('/:id', async (req, res) => {
 
 // POST /api/organizers - add a new organizer
 router.post('/', async (req, res) => {
-  console.log('POST /api/organizers - Request received:', req.body);
   const { first_name, last_name, contact_info } = req.body;
   
   if (!first_name || !last_name || !contact_info) {

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ConcertHub – Upcoming Concerts</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .hero-section {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6a3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+      background-size: cover;
+      background-position: center;
+      height: 300px;
+    }
+    .concert-card {
+      transition: all 0.3s ease;
+    }
+    .concert-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    #concertDetails {
+      transition: all 0.3s ease;
+    }
+    #concertDetails.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-20px);
+    }
+    #concertDetails:not(.hidden) {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .btn-primary {
+      @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300;
+    }
+    .btn-secondary {
+      @apply bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300;
+    }
+    .btn-delete {
+      @apply bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ml-4;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center">
+        <i class="fas fa-music text-2xl mr-2"></i>
+        <h1 class="text-2xl font-bold">ConcertHub</h1>
+      </div>
+      <nav class="hidden md:block">
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-700 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 bg-blue-700 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-700 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-700 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-700 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-700 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-700 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-700 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-700 rounded">Venue</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobileMenuButton" class="text-white focus:outline-none">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-blue-700 mt-2 p-4 rounded-lg">
+      <div class="flex flex-col space-y-2">
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-800 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 bg-blue-800 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-800 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-800 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 bg-blue-800 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 bg-blue-800 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 bg-blue-800 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 bg-blue-800 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 bg-blue-800 rounded">Venue</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section flex items-center justify-center text-white">
+    <div class="container mx-auto text-center px-4">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Discover Amazing Concerts</h1>
+      <p class="text-lg md:text-xl mb-6 max-w-2xl mx-auto">Browse upcoming concerts, view details, and book your tickets today!</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Left Column - Add Concert Form -->
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+          <h2 class="text-2xl font-bold mb-6 text-blue-700 flex items-center">
+            <i class="fas fa-plus-circle mr-2"></i>Add New Concert
+          </h2>
+          <form id="concertForm" class="space-y-4">
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Concert Name</label>
+              <input type="text" id="name" placeholder="Enter concert name" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+            </div>
+            <div>
+              <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input type="date" id="date" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+            </div>
+            <div>
+              <label for="time" class="block text-sm font-medium text-gray-700 mb-1">Time</label>
+              <input type="time" id="time" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+            </div>
+            <button type="submit" class="w-full btn-primary flex items-center justify-center">
+              <i class="fas fa-music mr-2"></i>Add Concert
+            </button>
+            <p id="formMessage" class="text-center text-sm mt-2"></p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Column - Concert List -->
+      <div class="lg:col-span-2">
+        <h2 class="text-3xl font-bold mb-6 text-blue-700 flex items-center">
+          <i class="fas fa-calendar-alt mr-2"></i>Upcoming Concerts
+        </h2>
+        
+        <!-- Concert List -->
+        <div id="concertList" class="space-y-4">
+          <!-- Dynamically filled -->
+          <!-- Loading placeholders -->
+          <div class="concert-card bg-white rounded-xl shadow-md p-4 animate-pulse">
+            <div class="h-4 bg-gray-200 rounded w-3/4 mb-3"></div>
+            <div class="h-3 bg-gray-200 rounded w-1/2 mb-4"></div>
+            <div class="flex justify-end">
+              <div class="h-8 bg-gray-200 rounded w-20"></div>
+            </div>
+          </div>
+          <div class="concert-card bg-white rounded-xl shadow-md p-4 animate-pulse">
+            <div class="h-4 bg-gray-200 rounded w-3/4 mb-3"></div>
+            <div class="h-3 bg-gray-200 rounded w-1/2 mb-4"></div>
+            <div class="flex justify-end">
+              <div class="h-8 bg-gray-200 rounded w-20"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Concert Details Modal -->
+    <div id="concertDetails" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-xl shadow-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-blue-700 flex items-center">
+            <i class="fas fa-info-circle mr-2"></i>Concert Details
+          </h3>
+          <button id="closeDetails" class="text-gray-500 hover:text-gray-700 text-2xl focus:outline-none">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div id="detailsContent" class="text-gray-700 space-y-3 mb-6">
+          <!-- Content will be dynamically filled -->
+        </div>
+        
+        <div class="bg-blue-50 p-4 rounded-lg mb-6">
+          <h4 class="text-lg font-semibold mb-3 text-blue-700 flex items-center">
+            <i class="fas fa-ticket-alt mr-2"></i>Ticket Sales Summary
+          </h4>
+          <div id="salesSummary" class="text-gray-600">
+            <!-- Sales data will be dynamically filled -->
+          </div>
+        </div>
+        
+        <div class="flex justify-center gap-4">
+          <button id="bookTicketsBtn" class="btn-primary">
+            <i class="fas fa-shopping-cart mr-2"></i>Book Tickets
+          </button>
+          <button id="closeDetailsBtn" class="btn-secondary">
+            <i class="fas fa-times mr-2"></i>Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-semibold mb-4">ConcertHub</h3>
+          <p class="text-gray-400">Your one-stop platform to discover and book tickets for the best concerts and music events.</p>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="concerts.html" class="text-gray-400 hover:text-white transition">Concerts</a></li>
+            <li><a href="artist.html" class="text-gray-400 hover:text-white transition">Artists</a></li>
+            <li><a href="Venue.html" class="text-gray-400 hover:text-white transition">Venues</a></li>
+            <li><a href="tickets.html" class="text-gray-400 hover:text-white transition">Tickets</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Support</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">FAQs</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Connect With Us</h3>
+          <div class="flex space-x-4 mb-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
+          </div>
+          <p class="text-gray-400">Subscribe to our newsletter for updates on upcoming concerts and exclusive offers.</p>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2025 ConcertHub. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobileMenuButton').addEventListener('click', function() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    const concertList = document.getElementById('concertList');
+    const concertForm = document.getElementById('concertForm');
+    const formMessage = document.getElementById('formMessage');
+    const concertDetails = document.getElementById('concertDetails');
+    const detailsContent = document.getElementById('detailsContent');
+    const salesSummary = document.getElementById('salesSummary');
+    const closeDetails = document.getElementById('closeDetails');
+    const closeDetailsBtn = document.getElementById('closeDetailsBtn');
+    const bookTicketsBtn = document.getElementById('bookTicketsBtn');
+
+    // Concert images for visual appeal (placeholders)
+    const concertImages = [
+      'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+      'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+      'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+      'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+      'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6a3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'
+    ];
+
+    async function fetchConcerts() {
+      // Keep the loading placeholders until data is loaded
+      try {
+        const res = await fetch('http://localhost:5000/api/concerts');
+        if (!res.ok) throw new Error('Error loading concerts');
+        const concerts = await res.json();
+        
+        // Clear loading placeholders
+        concertList.innerHTML = '';
+        
+        if (concerts.length === 0) {
+          concertList.innerHTML = `
+            <div class="bg-white rounded-xl shadow-md p-8 text-center">
+              <i class="fas fa-calendar-times text-gray-400 text-5xl mb-4"></i>
+              <p class="text-gray-500 text-lg">No concerts scheduled at the moment.</p>
+              <p class="text-gray-500">Check back soon or add a new concert!</p>
+            </div>
+          `;
+        } else {
+          concerts.forEach((concert, index) => {
+            const card = document.createElement('div');
+            card.className = "concert-card bg-white rounded-xl shadow-md overflow-hidden flex justify-between items-center";
+            
+            // Format date for display
+            const concertDate = new Date(concert.date);
+            const formattedDate = concertDate.toLocaleDateString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            });
+            
+            card.innerHTML = `
+              <div class="md:flex md:flex-grow">
+                <div class="md:w-1/3 h-48 bg-cover bg-center" style="background-image: url('${concertImages[index % concertImages.length]}')"></div>
+                <div class="p-6 md:w-2/3">
+                  <h3 class="text-xl font-bold mb-2">${concert.name}</h3>
+                  <div class="flex items-center mb-3 text-gray-600">
+                    <i class="far fa-calendar-alt mr-2"></i>
+                    <span>${formattedDate}</span>
+                  </div>
+                  <div class="flex items-center mb-4 text-gray-600">
+                    <i class="far fa-clock mr-2"></i>
+                    <span>${concert.time || '8:00 PM'}</span>
+                  </div>
+                  <div class="flex justify-start gap-4">
+                    <button onclick="showConcertDetails(${concert.concert_id})" class="btn-primary">
+                      <i class="fas fa-info-circle mr-2"></i>View Details
+                    </button>
+                    <button class="btn-delete" data-id="${concert.concert_id}" title="Delete Concert">
+                      <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+            
+            concertList.appendChild(card);
+          });
+        }
+      } catch (err) {
+        concertList.innerHTML = `
+          <div class="bg-white rounded-xl shadow-md p-8 text-center">
+            <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
+            <p class="text-red-500 text-lg">Failed to load concerts.</p>
+            <p class="text-gray-500">Please try again later or check your connection.</p>
+          </div>
+        `;
+      }
+    }
+
+    async function showConcertDetails(concertId) {
+      try {
+        // Show loading state
+        detailsContent.innerHTML = `
+          <div class="flex justify-center items-center p-8">
+            <i class="fas fa-spinner fa-spin text-blue-600 text-4xl"></i>
+          </div>
+        `;
+        salesSummary.innerHTML = '';
+        concertDetails.classList.remove('hidden');
+        
+        const detailsRes = await fetch(`http://localhost:5000/api/concerts/${concertId}/details`);
+        const salesRes = await fetch(`http://localhost:5000/api/concerts/${concertId}/sales-summary`);
+        
+        if (!detailsRes.ok || !salesRes.ok) throw new Error();
+
+        const details = await detailsRes.json();
+        const sales = await salesRes.json();
+
+        if (!details.length) {
+          detailsContent.innerHTML = `
+            <div class="text-center p-4">
+              <i class="fas fa-info-circle text-blue-500 text-4xl mb-3"></i>
+              <p class="text-gray-600">No concert details available.</p>
+            </div>
+          `;
+        } else {
+          const concert = details[0];
+          
+          // Format date for display
+          const concertDate = new Date(concert.date);
+          const formattedDate = concertDate.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+          
+          detailsContent.innerHTML = `
+            <div class="mb-6">
+              <h2 class="text-2xl font-bold mb-4">${concert.name}</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p class="flex items-center mb-2">
+                    <i class="far fa-calendar-alt text-blue-600 mr-2 w-5"></i>
+                    <span><strong>Date:</strong> ${formattedDate}</span>
+                  </p>
+                  <p class="flex items-center mb-2">
+                    <i class="far fa-clock text-blue-600 mr-2 w-5"></i>
+                    <span><strong>Time:</strong> ${concert.time || '8:00 PM'}</span>
+                  </p>
+                </div>
+                <div>
+                  <p class="flex items-center mb-2">
+                    <i class="fas fa-map-marker-alt text-blue-600 mr-2 w-5"></i>
+                    <span><strong>Venue:</strong> ${concert.venue_name || 'TBA'}</span>
+                  </p>
+                  <p class="flex items-center mb-2">
+                    <i class="fas fa-city text-blue-600 mr-2 w-5"></i>
+                    <span><strong>City:</strong> ${concert.venue_city || 'TBA'}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+              <h3 class="text-lg font-semibold mb-3 flex items-center">
+                <i class="fas fa-microphone text-blue-600 mr-2"></i>Performers
+              </h3>
+              <ul class="space-y-2">
+                ${details.map(d => `
+                  <li class="flex items-center">
+                    <i class="fas fa-user-circle text-gray-500 mr-2"></i>
+                    ${d.artist_first_name} ${d.artist_last_name} 
+                    <span class="text-gray-500 mx-2">•</span> 
+                    <span class="text-blue-600">${d.artist_genre}</span>
+                    <span class="text-gray-500 mx-2">•</span>
+                    <span>${d.performance_time || 'TBA'}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          `;
+        }
+
+        salesSummary.innerHTML = `
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-blue-100 p-3 rounded-lg text-center">
+              <p class="text-sm text-blue-600 mb-1">Total Tickets Sold</p>
+              <p class="text-2xl font-bold">${sales.total_tickets || 0}</p>
+            </div>
+            <div class="bg-green-100 p-3 rounded-lg text-center">
+              <p class="text-sm text-green-600 mb-1">Total Revenue</p>
+              <p class="text-2xl font-bold">$${sales.total_revenue || 0}</p>
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        detailsContent.innerHTML = `
+          <div class="text-center p-4">
+            <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-3"></i>
+            <p class="text-red-500">Could not load concert details.</p>
+            <p class="text-gray-600">Please try again later.</p>
+          </div>
+        `;
+        salesSummary.innerHTML = '';
+      }
+    }
+
+    concertForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      formMessage.textContent = '';
+      const name = document.getElementById('name').value.trim();
+      const date = document.getElementById('date').value;
+      const time = document.getElementById('time').value;
+
+      if (!name || !date || !time) {
+        formMessage.textContent = 'All fields are required.';
+        formMessage.className = 'text-red-600 text-center';
+        return;
+      }
+
+      try {
+        // Show loading state
+        const submitBtn = concertForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+        submitBtn.disabled = true;
+        
+        const res = await fetch('http://localhost:5000/api/concerts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, date, time }),
+        });
+        
+        // Restore button state
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        
+        if (!res.ok) throw new Error();
+
+        formMessage.innerHTML = '<i class="fas fa-check-circle text-green-600 mr-1"></i>Concert added successfully!';
+        formMessage.className = 'text-green-600 text-center';
+        concertForm.reset();
+        fetchConcerts();
+      } catch {
+        formMessage.innerHTML = '<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>Error adding concert.';
+        formMessage.className = 'text-red-600 text-center';
+      }
+    });
+
+    // Delete concert event delegation with improved 
+// Delete concert event delegation with fixed response reading
+// concertList.addEventListener('click', async (e) => {
+//   if (e.target.closest('.btn-delete')) {
+//     const btn = e.target.closest('.btn-delete');
+//     const concertId = btn.getAttribute('data-id');
+//     if (!concertId) return;
+
+//     const confirmed = confirm('Are you sure you want to delete this concert? This action cannot be undone.');
+//     if (!confirmed) return;
+
+//     try {
+//       btn.disabled = true;
+//       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+
+//       const res = await fetch(`http://localhost:5000/api/concerts/${concertId}`, {
+//         method: 'DELETE'
+//       });
+
+//       if (!res.ok) {
+//         let errorText;
+//         try {
+//           // Clone the response to read json and text separately
+//           const resClone = res.clone();
+//           const errorData = await resClone.json();
+//           errorText = errorData.error || JSON.stringify(errorData);
+//         } catch {
+//           errorText = await res.text();
+//         }
+//         alert('Failed to delete concert: ' + errorText);
+//         btn.disabled = false;
+//         btn.innerHTML = '<i class="fas fa-trash-alt"></i> Delete';
+//         return;
+//       }
+
+//       alert('Concert deleted successfully.');
+//       fetchConcerts();
+//     } catch (err) {
+//       alert('Error deleting concert: ' + err.message);
+//       btn.disabled = false;
+//       btn.innerHTML = '<i class="fas fa-trash-alt"></i> Delete';
+//     }
+//   }
+// });
+// Delete concert event delegation
+concertList.addEventListener('click', async (e) => {
+  if (e.target.closest('.btn-delete')) {
+    const btn = e.target.closest('.btn-delete');
+    const concertId = btn.getAttribute('data-id');
+    if (!concertId) return;
+
+    const confirmed = confirm('Are you sure you want to delete this concert? This action cannot be undone.');
+    if (!confirmed) return;
+
+    try {
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+
+      const res = await fetch(`http://localhost:5000/api/concerts/${concertId}`, {
+        method: 'DELETE'
+      });
+
+      if (!res.ok) {
+        let errorText;
+        try {
+          const errorData = await res.json();
+          errorText = errorData.error || JSON.stringify(errorData);
+        } catch {
+          errorText = await res.text();
+        }
+        alert('Failed to delete concert: ' + errorText);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-trash-alt"></i> Delete';
+        return;
+      }
+
+      alert('Concert deleted successfully.');
+      fetchConcerts();
+    } catch (err) {
+      alert('Error deleting concert: ' + err.message);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-trash-alt"></i> Delete';
+    }
+  }
+});
+
+
+
+
+
+
+
+
+
+    // Initial Load
+    fetchConcerts();
+  </script>
+
+</body>
+</html>

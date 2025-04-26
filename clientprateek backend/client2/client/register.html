@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register - ConcertHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .register-bg {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+    .form-input {
+      @apply w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
+    }
+    .btn-primary {
+      @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-300;
+    }
+    .btn-secondary {
+      @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-300;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center">
+        <i class="fas fa-music text-2xl mr-2"></i>
+        <h1 class="text-2xl font-bold">ConcertHub</h1>
+      </div>
+      <nav class="hidden md:block">
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-700 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-700 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-700 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-700 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-700 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-700 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-700 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-700 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-700 rounded">Venue</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobileMenuButton" class="text-white focus:outline-none">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-blue-700 mt-2 p-4 rounded-lg">
+      <div class="flex flex-col space-y-2">
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-800 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-800 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-800 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-800 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-800 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-800 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-800 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-800 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-800 rounded">Venue</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow">
+    <div class="min-h-[calc(100vh-64px)] flex flex-col md:flex-row">
+      <!-- Left Side - Registration Form -->
+      <div class="w-full md:w-1/2 flex items-center justify-center p-8 order-2 md:order-1">
+        <div class="w-full max-w-md">
+          <div class="bg-white rounded-xl shadow-xl p-8">
+            <div class="text-center mb-8">
+              <h2 class="text-3xl font-bold text-gray-900">Create Account</h2>
+              <p class="text-gray-600 mt-2">Join ConcertHub and start booking your favorite concerts</p>
+            </div>
+            
+            <form id="registerForm" class="space-y-5">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-user text-gray-400"></i>
+                    </div>
+                    <input 
+                      type="text" 
+                      id="firstName" 
+                      placeholder="First name" 
+                      class="form-input pl-10" 
+                      required 
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-user text-gray-400"></i>
+                    </div>
+                    <input 
+                      type="text" 
+                      id="lastName" 
+                      placeholder="Last name" 
+                      class="form-input pl-10" 
+                      required 
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-envelope text-gray-400"></i>
+                  </div>
+                  <input 
+                    type="email" 
+                    id="email" 
+                    placeholder="Email address" 
+                    class="form-input pl-10" 
+                    required 
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-phone text-gray-400"></i>
+                  </div>
+                  <input 
+                    type="tel" 
+                    id="phone" 
+                    placeholder="Phone number" 
+                    class="form-input pl-10" 
+                    required 
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-lock text-gray-400"></i>
+                  </div>
+                  <input 
+                    type="password" 
+                    id="password" 
+                    placeholder="Create a password" 
+                    class="form-input pl-10" 
+                    required 
+                  />
+                  <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <i class="fas fa-eye text-gray-400"></i>
+                  </button>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Password must be at least 6 characters</p>
+              </div>
+              
+              <div>
+                <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-lock text-gray-400"></i>
+                  </div>
+                  <input 
+                    type="password" 
+                    id="confirmPassword" 
+                    placeholder="Confirm your password" 
+                    class="form-input pl-10" 
+                    required 
+                  />
+                </div>
+              </div>
+              
+              <div class="flex items-center">
+                <input type="checkbox" id="terms" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" required>
+                <label for="terms" class="ml-2 block text-sm text-gray-700">
+                  I agree to the <a href="#" class="text-blue-600 hover:text-blue-800">Terms of Service</a> and <a href="#" class="text-blue-600 hover:text-blue-800">Privacy Policy</a>
+                </label>
+              </div>
+              
+              <div>
+                <button 
+                  type="submit" 
+                  class="w-full btn-primary flex items-center justify-center">
+                  <i class="fas fa-user-plus mr-2"></i>Create Account
+                </button>
+                <p id="registerMessage" class="text-center text-sm mt-2"></p>
+              </div>
+            </form>
+            
+            <div class="mt-6 text-center">
+              <p class="text-gray-600">Already have an account? <a href="login.html" class="text-blue-600 hover:text-blue-800 font-medium">Sign in</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Side - Image -->
+      <div class="hidden md:block md:w-1/2 register-bg order-1 md:order-2">
+        <div class="h-full flex flex-col justify-center items-center text-white p-8">
+          <h2 class="text-4xl font-bold mb-6">Join ConcertHub Today!</h2>
+          <p class="text-xl mb-8 text-center max-w-md">Create your account and get access to exclusive concert tickets and special offers.</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-lg">
+            <div class="bg-white bg-opacity-20 p-4 rounded-lg">
+              <div class="text-center mb-2">
+                <i class="fas fa-ticket-alt text-2xl"></i>
+              </div>
+              <h3 class="text-lg font-semibold text-center mb-2">Early Access</h3>
+              <p class="text-sm text-center">Get early access to tickets before they go on sale to the general public.</p>
+            </div>
+            
+            <div class="bg-white bg-opacity-20 p-4 rounded-lg">
+              <div class="text-center mb-2">
+                <i class="fas fa-percent text-2xl"></i>
+              </div>
+              <h3 class="text-lg font-semibold text-center mb-2">Special Discounts</h3>
+              <p class="text-sm text-center">Enjoy exclusive discounts and promotional offers on select concerts.</p>
+            </div>
+            
+            <div class="bg-white bg-opacity-20 p-4 rounded-lg">
+              <div class="text-center mb-2">
+                <i class="fas fa-bell text-2xl"></i>
+              </div>
+              <h3 class="text-lg font-semibold text-center mb-2">Notifications</h3>
+              <p class="text-sm text-center">Get notified when your favorite artists announce new concerts.</p>
+            </div>
+            
+            <div class="bg-white bg-opacity-20 p-4 rounded-lg">
+              <div class="text-center mb-2">
+                <i class="fas fa-star text-2xl"></i>
+              </div>
+              <h3 class="text-lg font-semibold text-center mb-2">VIP Packages</h3>
+              <p class="text-sm text-center">Access to exclusive VIP packages and meet-and-greet opportunities.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-semibold mb-4">ConcertHub</h3>
+          <p class="text-gray-400">Your one-stop platform to discover and book tickets for the best concerts and music events.</p>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="concerts.html" class="text-gray-400 hover:text-white transition">Concerts</a></li>
+            <li><a href="artist.html" class="text-gray-400 hover:text-white transition">Artists</a></li>
+            <li><a href="Venue.html" class="text-gray-400 hover:text-white transition">Venues</a></li>
+            <li><a href="tickets.html" class="text-gray-400 hover:text-white transition">Tickets</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Support</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">FAQs</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Connect With Us</h3>
+          <div class="flex space-x-4 mb-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
+          </div>
+          <p class="text-gray-400">Subscribe to our newsletter for updates on upcoming concerts and exclusive offers.</p>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2025 ConcertHub. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobileMenuButton').addEventListener('click', function() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      mobileMenu.classList.toggle('hidden');
+    });
+    
+    // Toggle password visibility
+    document.getElementById('togglePassword').addEventListener('click', function() {
+      const passwordInput = document.getElementById('password');
+      const icon = this.querySelector('i');
+      
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    });
+
+    const registerForm = document.getElementById('registerForm');
+    const registerMessage = document.getElementById('registerMessage');
+
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      registerMessage.textContent = '';
+      
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const termsChecked = document.getElementById('terms').checked;
+      
+      // Validation
+      if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
+        registerMessage.innerHTML = '<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>Please fill in all fields.';
+        registerMessage.className = 'text-center text-red-600 mt-2';
+        return;
+      }
+      
+      if (password.length < 6) {
+        registerMessage.innerHTML = '<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>Password must be at least 6 characters.';
+        registerMessage.className = 'text-center text-red-600 mt-2';
+        return;
+      }
+      
+      if (password !== confirmPassword) {
+        registerMessage.innerHTML = '<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>Passwords do not match.';
+        registerMessage.className = 'text-center text-red-600 mt-2';
+        return;
+      }
+      
+      if (!termsChecked) {
+        registerMessage.innerHTML = '<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>You must agree to the Terms of Service.';
+        registerMessage.className = 'text-center text-red-600 mt-2';
+        return;
+      }
+      
+      // Show loading state
+      const submitBtn = registerForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating account...';
+      submitBtn.disabled = true;
+
+      try {
+        const res = await fetch('http://localhost:5000/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ firstName, lastName, email, phone, password }),
+        });
+        
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.error || 'Registration failed');
+        }
+        
+        // Show success message
+        registerMessage.innerHTML = '<i class="fas fa-check-circle text-green-600 mr-1"></i>Registration successful! You can now login.';
+        registerMessage.className = 'text-center text-green-600 mt-2';
+        
+        // Show success with animation
+        submitBtn.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Success!';
+        submitBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+        submitBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+        
+        // Reset form after a delay
+        setTimeout(() => {
+          registerForm.reset();
+          window.location.href = 'login.html';
+        }, 2000);
+      } catch (err) {
+        // Restore button state
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        
+        // Show error message
+        registerMessage.innerHTML = `<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>${err.message || 'Registration failed. Please try again.'}`;
+        registerMessage.className = 'text-center text-red-600 mt-2';
+      }
+    });
+  </script>
+
+</body>
+</html>

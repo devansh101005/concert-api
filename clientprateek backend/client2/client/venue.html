@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Venues - ConcertHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .hero-section {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+      background-size: cover;
+      background-position: center;
+      height: 300px;
+    }
+    .venue-card {
+      transition: all 0.3s ease;
+    }
+    .venue-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    .btn-primary {
+      @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300;
+    }
+    .btn-secondary {
+      @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-300;
+    }
+    .btn-outline {
+      @apply border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-2 px-4 rounded-lg transition duration-300;
+    }
+    .form-input {
+      @apply w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
+    }
+    .form-label {
+      @apply block text-sm font-medium text-gray-700 mb-1;
+    }
+    .venue-capacity {
+      @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800;
+    }
+    .venue-type {
+      @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800;
+    }
+    .modal-backdrop {
+      @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal {
+      @apply bg-white rounded-xl shadow-xl w-full max-w-2xl transform transition-transform duration-300 scale-95;
+    }
+    .modal-backdrop.active .modal {
+      @apply scale-100;
+    }
+    .alert {
+      @apply p-4 mb-4 rounded-lg;
+      transition: opacity 0.3s ease;
+    }
+    .alert-success {
+      @apply bg-green-100 text-green-800 border border-green-200;
+    }
+    .alert-error {
+      @apply bg-red-100 text-red-800 border border-red-200;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-40">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center">
+        <i class="fas fa-music text-2xl mr-2"></i>
+        <h1 class="text-2xl font-bold">ConcertHub</h1>
+      </div>
+      <nav class="hidden md:block">
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-700 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-700 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-700 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-700 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-700 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-700 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-700 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-700 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 bg-blue-700 rounded">Venue</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobileMenuButton" class="text-white focus:outline-none">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-blue-700 mt-2 p-4 rounded-lg">
+      <div class="flex flex-col space-y-2">
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-800 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-800 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-800 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-800 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-800 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-800 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-800 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-800 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 bg-blue-800 rounded">Venue</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section flex items-center justify-center text-white">
+    <div class="container mx-auto text-center px-4">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Concert Venues</h1>
+      <p class="text-lg md:text-xl mb-6 max-w-2xl mx-auto">Manage the perfect locations for your music events and performances.</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-10">
+    <!-- Alert Container -->
+    <div id="alertContainer" class="mb-6"></div>
+    
+    <!-- Venue Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white rounded-xl shadow-md p-6">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+            <i class="fas fa-map-marker-alt text-xl"></i>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Total Venues</p>
+            <p id="totalVenues" class="text-xl font-bold">Loading...</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-xl shadow-md p-6">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+            <i class="fas fa-users text-xl"></i>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Total Capacity</p>
+            <p id="totalCapacity" class="text-xl font-bold">Loading...</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-xl shadow-md p-6">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
+            <i class="fas fa-calendar-alt text-xl"></i>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Upcoming Events</p>
+            <p id="upcomingEvents" class="text-xl font-bold">Loading...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Venues Card -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-10">
+      <div class="p-6 bg-blue-50 border-b border-blue-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <h2 class="text-2xl font-bold text-blue-700 flex items-center">
+          <i class="fas fa-map-marker-alt mr-2"></i>All Venues
+        </h2>
+        <div class="flex flex-wrap gap-2">
+          <button id="refreshBtn" class="btn-outline flex items-center">
+            <i class="fas fa-sync-alt mr-2"></i> Refresh
+          </button>
+          <button id="addVenueBtn" class="btn-primary flex items-center">
+            <i class="fas fa-plus mr-2"></i> Add New Venue
+          </button>
+        </div>
+      </div>
+      
+      <!-- Search and Filter -->
+      <div class="p-4 border-b border-gray-200">
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <div class="flex-grow">
+            <div class="relative">
+              <input type="text" id="searchInput" placeholder="Search venues..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <div class="absolute left-3 top-2.5 text-gray-400">
+                <i class="fas fa-search"></i>
+              </div>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <div class="relative">
+              <button id="filterBtn" class="btn-secondary flex items-center">
+                <i class="fas fa-filter mr-2"></i>Filter
+              </button>
+              <div id="filterDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10 p-2">
+                <div class="p-2">
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" class="form-checkbox" value="all" checked>
+                    <span class="ml-2">All Venues</span>
+                  </label>
+                </div>
+                <div class="p-2">
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" class="form-checkbox" value="indoor">
+                    <span class="ml-2">Indoor</span>
+                  </label>
+                </div>
+                <div class="p-2">
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" class="form-checkbox" value="outdoor">
+                    <span class="ml-2">Outdoor</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="relative">
+              <button id="sortBtn" class="btn-secondary flex items-center">
+                <i class="fas fa-sort mr-2"></i>Sort
+              </button>
+              <div id="sortDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10 p-2">
+                <div class="p-2 hover:bg-gray-100 cursor-pointer" data-sort="name">
+                  <i class="fas fa-sort-alpha-down mr-2"></i>Name
+                </div>
+                <div class="p-2 hover:bg-gray-100 cursor-pointer" data-sort="capacity">
+                  <i class="fas fa-sort-numeric-down mr-2"></i>Capacity
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Venues Table -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Venue ID</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Venue Details</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Capacity</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="venuesTable" class="bg-white divide-y divide-gray-200">
+            <!-- Loading placeholders -->
+            <tr class="animate-pulse">
+              <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-10"></div></td>
+              <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-32"></div></td>
+              <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-48"></div></td>
+              <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
+              <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
+            </tr>
+            <tr class="animate-pulse">
+              <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-10"></div></td>
+              <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-32"></div></td>
+              <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-48"></div></td>
+              <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
+              <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="tableMessage" class="p-8 text-center hidden">
+        <!-- Will show messages when table is empty or loading -->
+      </div>
+    </div>
+    
+    <!-- Featured Venues Section -->
+    <section class="mb-10">
+      <h2 class="text-3xl font-bold mb-6 text-blue-700">Featured Venues</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="featuredVenues">
+        <!-- Loading placeholders -->
+        <div class="venue-card bg-white rounded-xl shadow-md overflow-hidden animate-pulse">
+          <div class="h-48 bg-gray-200"></div>
+          <div class="p-6 space-y-3">
+            <div class="h-6 bg-gray-200 rounded w-3/4"></div>
+            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div class="h-4 bg-gray-200 rounded w-full"></div>
+          </div>
+        </div>
+        <div class="venue-card bg-white rounded-xl shadow-md overflow-hidden animate-pulse">
+          <div class="h-48 bg-gray-200"></div>
+          <div class="p-6 space-y-3">
+            <div class="h-6 bg-gray-200 rounded w-3/4"></div>
+            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div class="h-4 bg-gray-200 rounded w-full"></div>
+          </div>
+        </div>
+        <div class="venue-card bg-white rounded-xl shadow-md overflow-hidden animate-pulse">
+          <div class="h-48 bg-gray-200"></div>
+          <div class="p-6 space-y-3">
+            <div class="h-6 bg-gray-200 rounded w-3/4"></div>
+            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div class="h-4 bg-gray-200 rounded w-full"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Venue Types Section -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-8 text-center text-blue-700">Venue Types</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-building text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">Indoor Venues</h3>
+          <p class="text-gray-600">Climate-controlled indoor venues perfect for year-round events regardless of weather conditions.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-tree text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">Outdoor Venues</h3>
+          <p class="text-gray-600">Open-air venues offering natural ambiance and larger capacities for summer concerts and festivals.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-theater-masks text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">Theaters & Arenas</h3>
+          <p class="text-gray-600">Purpose-built performance spaces with excellent acoustics and visibility for an optimal concert experience.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-semibold mb-4">ConcertHub</h3>
+          <p class="text-gray-400">Your one-stop platform to discover and book tickets for the best concerts and music events.</p>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="concerts.html" class="text-gray-400 hover:text-white transition">Concerts</a></li>
+            <li><a href="artist.html" class="text-gray-400 hover:text-white transition">Artists</a></li>
+            <li><a href="Venue.html" class="text-gray-400 hover:text-white transition">Venues</a></li>
+            <li><a href="tickets.html" class="text-gray-400 hover:text-white transition">Tickets</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Support</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">FAQs</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Connect With Us</h3>
+          <div class="flex space-x-4 mb-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
+          </div>
+          <p class="text-gray-400">Subscribe to our newsletter for updates on upcoming concerts and exclusive offers.</p>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2025 ConcertHub. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Add/Edit Venue Modal -->
+  <div class="modal-backdrop" id="venueModal">
+    <div class="modal">
+      <div class="p-6 border-b border-gray-200">
+        <div class="flex justify-between items-center">
+          <h3 class="text-xl font-bold text-gray-900" id="modalTitle">Add New Venue</h3>
+          <button class="text-gray-400 hover:text-gray-500 focus:outline-none" id="closeModalBtn">
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+      </div>
+      <div class="p-6">
+        <form id="venueForm" class="space-y-4">
+          <input type="hidden" id="venueId" value="">
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label for="name" class="form-label">Venue Name*</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-map-marker-alt"></i>
+                </span>
+                <input type="text" id="name" required placeholder="Enter venue name" class="form-input rounded-l-none">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="capacity" class="form-label">Capacity*</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-users"></i>
+                </span>
+                <input type="number" id="capacity" required min="1" placeholder="Maximum attendance capacity" class="form-input rounded-l-none">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="street" class="form-label">Street Address</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-road"></i>
+                </span>
+                <input type="text" id="street" placeholder="Enter street address" class="form-input rounded-l-none">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="city" class="form-label">City</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-city"></i>
+                </span>
+                <input type="text" id="city" placeholder="Enter city" class="form-input rounded-l-none">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="pinCode" class="form-label">Pin Code</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-map-pin"></i>
+                </span>
+                <input type="number" id="pinCode" placeholder="Enter pin code" class="form-input rounded-l-none">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="venueType" class="form-label">Venue Type</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-building"></i>
+                </span>
+                <select id="venueType" class="form-input rounded-l-none">
+                  <option value="">Select venue type</option>
+                  <option value="indoor">Indoor</option>
+                  <option value="outdoor">Outdoor</option>
+                  <option value="stadium">Stadium</option>
+                  <option value="theater">Theater</option>
+                  <option value="club">Club</option>
+                  <option value="arena">Arena</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="description" class="form-label">Description</label>
+            <textarea id="description" rows="3" placeholder="Enter venue description" class="form-input"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Amenities</label>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="inline-flex items-center">
+                <input type="checkbox" class="form-checkbox text-blue-600" name="amenities" value="parking">
+                <span class="ml-2">Parking</span>
+              </label>
+              <label class="inline-flex items-center">
+                <input type="checkbox" class="form-checkbox text-blue-600" name="amenities" value="food">
+                <span class="ml-2">Food & Beverages</span>
+              </label>
+              <label class="inline-flex items-center">
+                <input type="checkbox" class="form-checkbox text-blue-600" name="amenities" value="accessible">
+                <span class="ml-2">Wheelchair Accessible</span>
+              </label>
+              <label class="inline-flex items-center">
+                <input type="checkbox" class="form-checkbox text-blue-600" name="amenities" value="vip">
+                <span class="ml-2">VIP Areas</span>
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="p-6 border-t border-gray-200 flex justify-end gap-3">
+        <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+        <button type="button" class="btn-primary" id="saveVenueBtn">
+          <i class="fas fa-save mr-2"></i>Save Venue
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobileMenuButton').addEventListener('click', function() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Filter dropdown toggle
+    document.getElementById('filterBtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      const filterDropdown = document.getElementById('filterDropdown');
+      filterDropdown.classList.toggle('hidden');
+      
+      // Hide sort dropdown if open
+      document.getElementById('sortDropdown').classList.add('hidden');
+    });
+
+    // Sort dropdown toggle
+    document.getElementById('sortBtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      const sortDropdown = document.getElementById('sortDropdown');
+      sortDropdown.classList.toggle('hidden');
+      
+      // Hide filter dropdown if open
+      document.getElementById('filterDropdown').classList.add('hidden');
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      const filterBtn = document.getElementById('filterBtn');
+      const filterDropdown = document.getElementById('filterDropdown');
+      const sortBtn = document.getElementById('sortBtn');
+      const sortDropdown = document.getElementById('sortDropdown');
+      
+      if (!filterBtn.contains(e.target) && !filterDropdown.contains(e.target)) {
+        filterDropdown.classList.add('hidden');
+      }
+      
+      if (!sortBtn.contains(e.target) && !sortDropdown.contains(e.target)) {
+        sortDropdown.classList.add('hidden');
+      }
+    });
+
+    // DOM Elements
+    const venuesTable = document.getElementById('venuesTable');
+    const featuredVenues = document.getElementById('featuredVenues');
+    const addVenueBtn = document.getElementById('addVenueBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const venueModal = document.getElementById('venueModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const saveVenueBtn = document.getElementById('saveVenueBtn');
+    const venueForm = document.getElementById('venueForm');
+    const modalTitle = document.getElementById('modalTitle');
+    const venueIdInput = document.getElementById('venueId');
+    const alertContainer = document.getElementById('alertContainer');
+    const tableMessage = document.getElementById('tableMessage');
+    const totalVenuesElement = document.getElementById('totalVenues');
+    const totalCapacityElement = document.getElementById('totalCapacity');
+    const upcomingEventsElement = document.getElementById('upcomingEvents');
+    const searchInput = document.getElementById('searchInput');
+    
+    // Venue images for featured venues (placeholders)
+    const venueImages = [
+      'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+      'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+      'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+      'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+      'https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'
+    ];
+    
+    // Set mock data for stats (in a real app, this would come from the API)
+    function setMockStats() {
+      setTimeout(() => {
+        totalVenuesElement.textContent = '24';
+        totalCapacityElement.textContent = '78,500 seats';
+        upcomingEventsElement.textContent = '12 events';
+      }, 1500);
+    }
+    
+    // Show alert message
+    function showAlert(message, type = 'success') {
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type}`;
+      alert.innerHTML = type === 'success' 
+        ? `<div class="flex items-center"><i class="fas fa-check-circle text-green-600 mr-2"></i>${message}</div>`
+        : `<div class="flex items-center"><i class="fas fa-exclamation-circle text-red-600 mr-2"></i>${message}</div>`;
+      
+      alertContainer.innerHTML = '';
+      alertContainer.appendChild(alert);
+      
+      setTimeout(() => {
+        alert.style.opacity = '0';
+        setTimeout(() => alertContainer.innerHTML = '', 300);
+      }, 3000);
+    }
+    
+    // Open modal
+    function openModal(title = 'Add New Venue', isEdit = false) {
+      modalTitle.textContent = title;
+      venueModal.classList.add('active');
+      if (!isEdit) {
+        venueForm.reset();
+        venueIdInput.value = '';
+      }
+    }
+    
+    // Close modal
+    function handleCloseModal() {
+      venueModal.classList.remove('active');
+    }
+    
+    // Format address from venue data
+    function formatAddress(venue) {
+      const parts = [];
+      if (venue.street) parts.push(venue.street);
+      if (venue.city) parts.push(venue.city);
+      if (venue.pin_code) parts.push(venue.pin_code);
+      return parts.length > 0 ? parts.join(', ') : 'No address provided';
+    }
+    
+    // Search functionality
+    searchInput.addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('#venuesTable tr:not(.animate-pulse)');
+      
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? '' : 'none';
+      });
+    });
+    
+    // Fetch all venues
+    async function fetchVenues() {
+      try {
+        // Show loading state
+        venuesTable.innerHTML = `
+          <tr class="animate-pulse">
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-10"></div></td>
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-32"></div></td>
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-48"></div></td>
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
+          </tr>
+          <tr class="animate-pulse">
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-10"></div></td>
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-32"></div></td>
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-48"></div></td>
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
+          </tr>
+        `;
+        
+        // Fetch venues from the API using absolute URL
+        const response = await fetch('http://localhost:5000/api/venues');
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        const venues = await response.json();
+        
+        // Update total venues count
+        totalVenuesElement.textContent = venues.length;
+        
+        // Calculate total capacity
+        const totalCapacity = venues.reduce((sum, venue) => sum + venue.capacity, 0);
+        totalCapacityElement.textContent = totalCapacity.toLocaleString() + ' seats';
+        
+        venuesTable.innerHTML = '';
+        
+        if (venues.length === 0) {
+          tableMessage.innerHTML = `
+            <div class="flex flex-col items-center justify-center">
+              <i class="fas fa-map-marker-slash text-gray-400 text-5xl mb-4"></i>
+              <p class="text-gray-500 text-lg">No venues found.</p>
+              <p class="text-gray-500">Add your first venue using the form.</p>
+            </div>
+          `;
+          tableMessage.classList.remove('hidden');
+        } else {
+          tableMessage.classList.add('hidden');
+          
+          venues.forEach(venue => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-gray-50';
+            
+            tr.innerHTML = `
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+                  #${venue.venue_id}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                    <i class="fas fa-map-marker-alt text-blue-600"></i>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">${venue.name}</div>
+                    <div class="text-xs mt-1">
+                      ${venue.venue_type ? `<span class="venue-type">${venue.venue_type}</span>` : ''}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-500">
+                  <i class="fas fa-map-pin text-gray-400 mr-1"></i> ${formatAddress(venue)}
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="venue-capacity">
+                  <i class="fas fa-users text-blue-600 mr-1"></i> ${venue.capacity.toLocaleString()} seats
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <button class="text-blue-600 hover:text-blue-800 mr-3 edit-btn" data-id="${venue.venue_id}">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="text-blue-600 hover:text-blue-800 mr-3 view-btn" data-id="${venue.venue_id}">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="text-gray-600 hover:text-gray-800">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+              </td>
+            `;
+            
+            venuesTable.appendChild(tr);
+          });
+          
+          // Add event listeners to the buttons
+          document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const venueId = e.currentTarget.getAttribute('data-id');
+              editVenue(venueId);
+            });
+          });
+          
+          document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const venueId = e.currentTarget.getAttribute('data-id');
+              viewVenueDetails(venueId);
+            });
+          });
+          
+          // Populate featured venues
+          featuredVenues.innerHTML = '';
+          venues.slice(0, 3).forEach((venue, index) => {
+            const card = document.createElement('div');
+            card.className = 'venue-card bg-white rounded-xl shadow-md overflow-hidden';
+            
+            card.innerHTML = `
+              <img src="${venueImages[index % venueImages.length]}" alt="${venue.name}" class="h-48 w-full object-cover">
+              <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">${venue.name}</h3>
+                <div class="flex items-center mb-2">
+                  <i class="fas fa-map-marker-alt text-gray-500 mr-2"></i>
+                  <span class="text-gray-500">${venue.city}</span>
+                </div>
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-users text-blue-600 mr-2"></i>
+                  <span class="venue-capacity">${venue.capacity.toLocaleString()} seats</span>
+                  ${venue.venue_type ? `<span class="venue-type ml-2">${venue.venue_type}</span>` : ''}
+                </div>
+                <p class="text-gray-600 mb-4 line-clamp-2">${venue.description || 'No description available.'}</p>
+                <button class="btn-primary w-full flex items-center justify-center">
+                  <i class="fas fa-info-circle mr-2"></i>View Details
+                </button>
+              </div>
+            `;
+            
+            featuredVenues.appendChild(card);
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        showAlert('Error loading venues: ' + err.message, 'error');
+        tableMessage.innerHTML = `
+          <div class="flex flex-col items-center justify-center">
+            <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
+            <p class="text-red-500 text-lg">Failed to load venues.</p>
+            <p class="text-gray-500">Please try again later or check your connection.</p>
+          </div>
+        `;
+        tableMessage.classList.remove('hidden');
+      }
+    }
+
+    // Edit venue
+    async function editVenue(venueId) {
+      try {
+        // Fetch venue data from the API using absolute URL
+        const response = await fetch(`http://localhost:5000/api/venues/${venueId}`);
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        const venue = await response.json();
+        
+        // Populate form
+        document.getElementById('venueId').value = venue.venue_id;
+        document.getElementById('name').value = venue.name || '';
+        document.getElementById('street').value = venue.street || '';
+        document.getElementById('city').value = venue.city || '';
+        document.getElementById('pinCode').value = venue.pin_code || '';
+        document.getElementById('capacity').value = venue.capacity || '';
+        document.getElementById('venueType').value = venue.venue_type || '';
+        document.getElementById('description').value = venue.description || '';
+        
+        openModal('Edit Venue', true);
+      } catch (err) {
+        showAlert('Error fetching venue details: ' + err.message, 'error');
+      }
+    }
+
+    // View venue details
+    function viewVenueDetails(venueId) {
+      // This would normally fetch the venue and show in a detailed view
+      // For now, we'll just edit the venue
+      editVenue(venueId);
+    }
+
+    // Save venue (create or update)
+    async function saveVenue() {
+      const venueId = document.getElementById('venueId').value;
+      const name = document.getElementById('name').value.trim();
+      const street = document.getElementById('street').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const pinCode = document.getElementById('pinCode').value.trim();
+      const capacity = document.getElementById('capacity').value.trim();
+      const venueType = document.getElementById('venueType').value;
+      const description = document.getElementById('description').value.trim();
+      
+      if (!name || !capacity) {
+        showAlert('Name and capacity are required fields', 'error');
+        return;
+      }
+      
+      const venueData = {
+        name,
+        street,
+        city,
+        pin_code: pinCode ? parseInt(pinCode) : null,
+        capacity: parseInt(capacity),
+        venue_type: venueType,
+        description
+      };
+      
+      try {
+        let response;
+        
+        if (venueId) {
+          // Update existing venue using absolute URL
+          response = await fetch(`http://localhost:5000/api/venues/${venueId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(venueData)
+          });
+        } else {
+          // Create new venue using absolute URL
+          response = await fetch('http://localhost:5000/api/venues', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(venueData)
+          });
+        }
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        
+        showAlert(venueId ? 'Venue updated successfully' : 'Venue added successfully');
+        handleCloseModal();
+        fetchVenues();
+      } catch (err) {
+        showAlert('Error: ' + err.message, 'error');
+      }
+    }
+
+    // Event Listeners
+    addVenueBtn.addEventListener('click', () => openModal());
+    closeModalBtn.addEventListener('click', handleCloseModal);
+    cancelBtn.addEventListener('click', handleCloseModal);
+    saveVenueBtn.addEventListener('click', saveVenue);
+    refreshBtn.addEventListener('click', fetchVenues);
+    
+    // Close modal when clicking outside
+    venueModal.addEventListener('click', (e) => {
+      if (e.target === venueModal) {
+        handleCloseModal();
+      }
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchVenues();
+      setMockStats();
+    });
+  </script>
+
+</body>
+</html>

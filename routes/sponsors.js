@@ -32,9 +32,19 @@ router.get('/:id', async (req, res) => {
 // POST /api/sponsors - add a new sponsor
 router.post('/', async (req, res) => {
   const { name, spons_amount } = req.body;
+  
+  if (!name || !spons_amount) {
+    return res.status(400).json({ error: 'Sponsor name and amount are required' });
+  }
+  
   try {
-    const q = 'INSERT INTO sponsorship (name, spons_amount) VALUES ($1, $2) RETURNING sponsor_id, name, spons_amount';
-    const { rows } = await pool.query(q, [name, spons_amount]);
+    // Get the next sponsor_id by finding the maximum existing ID and adding 1
+    const maxIdQuery = 'SELECT MAX(sponsor_id) FROM sponsorship';
+    const maxIdResult = await pool.query(maxIdQuery);
+    const nextId = (maxIdResult.rows[0].max || 0) + 1;
+    
+    const q = 'INSERT INTO sponsorship (sponsor_id, name, spons_amount) VALUES ($1, $2, $3) RETURNING sponsor_id, name, spons_amount';
+    const { rows } = await pool.query(q, [nextId, name, spons_amount]);
     res.status(201).json(rows[0]);
   } catch (err) {
     console.error(err);

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Buyers - ConcertHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .hero-section {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+      background-size: cover;
+      background-position: center;
+      height: 300px;
+    }
+    .buyer-card {
+      transition: all 0.3s ease;
+    }
+    .buyer-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    .btn-primary {
+      @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300;
+    }
+    .btn-secondary {
+      @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-300;
+    }
+    .form-input {
+      @apply w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
+    }
+    .form-label {
+      @apply block text-sm font-medium text-gray-700 mb-1;
+    }
+    .shimmer {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center">
+        <i class="fas fa-music text-2xl mr-2"></i>
+        <h1 class="text-2xl font-bold">ConcertHub</h1>
+      </div>
+      <nav class="hidden md:block">
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-700 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-700 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-700 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-700 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-700 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-700 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-700 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 bg-blue-700 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-700 rounded">Venue</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobileMenuButton" class="text-white focus:outline-none">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-blue-700 mt-2 p-4 rounded-lg">
+      <div class="flex flex-col space-y-2">
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-800 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-800 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-800 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-800 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-800 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-800 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-800 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 bg-blue-800 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-800 rounded">Venue</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section flex items-center justify-center text-white">
+    <div class="container mx-auto text-center px-4">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Concert Buyers</h1>
+      <p class="text-lg md:text-xl mb-6 max-w-2xl mx-auto">Manage registered users and add new buyers to the ConcertHub platform.</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Left Column - Buyer Form -->
+      <div class="lg:col-span-1 order-2 lg:order-1">
+        <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+          <h2 class="text-2xl font-bold mb-6 text-blue-700 flex items-center">
+            <i class="fas fa-user-plus mr-2"></i>Add New Buyer
+          </h2>
+          <form id="buyerForm" class="space-y-4">
+            <div>
+              <label for="firstName" class="form-label">First Name</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-user"></i>
+                </span>
+                <input type="text" id="firstName" placeholder="Enter first name" class="form-input rounded-l-none" required />
+              </div>
+            </div>
+            
+            <div>
+              <label for="lastName" class="form-label">Last Name</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-user"></i>
+                </span>
+                <input type="text" id="lastName" placeholder="Enter last name" class="form-input rounded-l-none" required />
+              </div>
+            </div>
+            
+            <div>
+              <label for="email" class="form-label">Email Address</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-envelope"></i>
+                </span>
+                <input type="email" id="email" placeholder="Enter email address" class="form-input rounded-l-none" required />
+              </div>
+            </div>
+            
+            <div>
+              <label for="phone" class="form-label">Phone Number</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-phone"></i>
+                </span>
+                <input type="text" id="phone" placeholder="Enter phone number" class="form-input rounded-l-none" required />
+              </div>
+            </div>
+            
+            <div>
+              <label for="password" class="form-label">Password</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-lock"></i>
+                </span>
+                <input type="password" id="password" placeholder="Create a password" class="form-input rounded-l-none" required />
+              </div>
+              <p class="text-xs text-gray-500 mt-1">Password must be at least 6 characters long</p>
+            </div>
+            
+            <button type="submit" class="w-full btn-primary flex items-center justify-center py-3">
+              <i class="fas fa-plus-circle mr-2"></i>Add Buyer
+            </button>
+            <p id="formMessage" class="mt-2 text-center"></p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Column - Buyers List -->
+      <div class="lg:col-span-2 order-1 lg:order-2">
+        <h2 class="text-3xl font-bold mb-6 text-blue-700 flex items-center">
+          <i class="fas fa-users mr-2"></i>Registered Buyers
+        </h2>
+        
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div class="bg-white rounded-xl shadow-md p-4">
+            <div class="flex items-center">
+              <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+                <i class="fas fa-users text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Total Buyers</p>
+                <p id="totalBuyers" class="text-xl font-bold">Loading...</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-md p-4">
+            <div class="flex items-center">
+              <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+                <i class="fas fa-ticket-alt text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Tickets Purchased</p>
+                <p id="totalTickets" class="text-xl font-bold">Loading...</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-md p-4">
+            <div class="flex items-center">
+              <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
+                <i class="fas fa-calendar-alt text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Active Since</p>
+                <p id="activeSince" class="text-xl font-bold">Loading...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Search and Filter -->
+        <div class="bg-white rounded-xl shadow-md p-4 mb-6">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div class="mb-4 md:mb-0 md:w-1/2">
+              <div class="relative">
+                <input type="text" id="searchInput" placeholder="Search buyers..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <div class="absolute left-3 top-2.5 text-gray-400">
+                  <i class="fas fa-search"></i>
+                </div>
+              </div>
+            </div>
+            <div class="flex space-x-2">
+              <button id="refreshBtn" class="btn-secondary flex items-center">
+                <i class="fas fa-sync-alt mr-2"></i>Refresh
+              </button>
+              <div class="relative">
+                <button id="filterBtn" class="btn-secondary flex items-center">
+                  <i class="fas fa-filter mr-2"></i>Filter
+                </button>
+                <div id="filterDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10 p-2">
+                  <div class="p-2">
+                    <label class="inline-flex items-center">
+                      <input type="checkbox" class="form-checkbox" value="all" checked>
+                      <span class="ml-2">All Buyers</span>
+                    </label>
+                  </div>
+                  <div class="p-2">
+                    <label class="inline-flex items-center">
+                      <input type="checkbox" class="form-checkbox" value="recent">
+                      <span class="ml-2">Recent Buyers</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Buyers Table -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer ID</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Info</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="buyersTable" class="bg-white divide-y divide-gray-200">
+                <!-- Loading placeholders -->
+                <tr class="animate-pulse">
+                  <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-10"></div></td>
+                  <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-32"></div></td>
+                  <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-48"></div></td>
+                  <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
+                </tr>
+                <tr class="animate-pulse">
+                  <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-10"></div></td>
+                  <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-32"></div></td>
+                  <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-48"></div></td>
+                  <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div id="tableMessage" class="p-8 text-center hidden">
+            <!-- Will show messages when table is empty or loading -->
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Buyer Benefits Section -->
+    <section class="mt-16">
+      <h2 class="text-3xl font-bold mb-8 text-center text-blue-700">Buyer Benefits</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-ticket-alt text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">Priority Booking</h3>
+          <p class="text-gray-600">Registered buyers get early access to ticket sales for the most popular concerts before they sell out.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-percent text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">Special Discounts</h3>
+          <p class="text-gray-600">Enjoy exclusive discounts and promotional offers available only to registered members of ConcertHub.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-bell text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">Event Notifications</h3>
+          <p class="text-gray-600">Get personalized notifications about upcoming concerts based on your music preferences and past purchases.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12 mt-16">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-semibold mb-4">ConcertHub</h3>
+          <p class="text-gray-400">Your one-stop platform to discover and book tickets for the best concerts and music events.</p>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="concerts.html" class="text-gray-400 hover:text-white transition">Concerts</a></li>
+            <li><a href="artist.html" class="text-gray-400 hover:text-white transition">Artists</a></li>
+            <li><a href="Venue.html" class="text-gray-400 hover:text-white transition">Venues</a></li>
+            <li><a href="tickets.html" class="text-gray-400 hover:text-white transition">Tickets</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Support</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">FAQs</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Connect With Us</h3>
+          <div class="flex space-x-4 mb-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
+          </div>
+          <p class="text-gray-400">Subscribe to our newsletter for updates on upcoming concerts and exclusive offers.</p>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2025 ConcertHub. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobileMenuButton').addEventListener('click', function() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Filter dropdown toggle
+    document.getElementById('filterBtn').addEventListener('click', function() {
+      const filterDropdown = document.getElementById('filterDropdown');
+      filterDropdown.classList.toggle('hidden');
+    });
+
+    // Close filter dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const filterBtn = document.getElementById('filterBtn');
+      const filterDropdown = document.getElementById('filterDropdown');
+      
+      if (!filterBtn.contains(event.target) && !filterDropdown.contains(event.target)) {
+        filterDropdown.classList.add('hidden');
+      }
+    });
+
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('#buyersTable tr:not(.animate-pulse)');
+      
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? '' : 'none';
+      });
+    });
+
+    // Refresh button
+    document.getElementById('refreshBtn').addEventListener('click', function() {
+      fetchBuyers();
+    });
+
+    const buyerForm = document.getElementById('buyerForm');
+    const formMessage = document.getElementById('formMessage');
+    const tableMessage = document.getElementById('tableMessage');
+    const totalBuyersElement = document.getElementById('totalBuyers');
+    const totalTicketsElement = document.getElementById('totalTickets');
+    const activeSinceElement = document.getElementById('activeSince');
+
+    // Set mock data for stats (in a real app, this would come from the API)
+    function setMockStats() {
+      setTimeout(() => {
+        totalBuyersElement.textContent = '152';
+        totalTicketsElement.textContent = '437';
+        activeSinceElement.textContent = 'Jan 2025';
+      }, 1500);
+    }
+
+    async function fetchBuyers() {
+      try {
+        // Show loading state
+        document.getElementById('buyersTable').innerHTML = `
+          <tr class="animate-pulse">
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-10"></div></td>
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-32"></div></td>
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-48"></div></td>
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
+          </tr>
+          <tr class="animate-pulse">
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-10"></div></td>
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-32"></div></td>
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-48"></div></td>
+            <td class="px-6 py-4 whitespace-nowrap"><div class="h-4 bg-gray-200 rounded w-20"></div></td>
+          </tr>
+        `;
+        
+        const res = await fetch('http://localhost:5000/api/buyers');
+        if (!res.ok) throw new Error('Failed to fetch buyers');
+        const buyers = await res.json();
+        
+        const tbody = document.getElementById('buyersTable');
+        tbody.innerHTML = '';
+        
+        if (buyers.length === 0) {
+          tableMessage.innerHTML = `
+            <div class="flex flex-col items-center justify-center">
+              <i class="fas fa-users-slash text-gray-400 text-5xl mb-4"></i>
+              <p class="text-gray-500 text-lg">No buyers found.</p>
+              <p class="text-gray-500">Add your first buyer using the form.</p>
+            </div>
+          `;
+          tableMessage.classList.remove('hidden');
+        } else {
+          tableMessage.classList.add('hidden');
+          
+          buyers.forEach(buyer => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-gray-50';
+            tr.innerHTML = `
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+                  #${buyer.buyer_id}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                    <i class="fas fa-user text-blue-600"></i>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">${buyer.first_name} ${buyer.last_name}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm">
+                  <div class="flex items-center mb-1">
+                    <i class="fas fa-envelope text-gray-500 mr-2"></i>
+                    ${buyer.email_id}
+                  </div>
+                  <div class="flex items-center">
+                    <i class="fas fa-phone text-gray-500 mr-2"></i>
+                    ${buyer.phone_no}
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <button class="view-tickets-btn text-blue-600 hover:text-blue-800 mr-3">
+                  <i class="fas fa-ticket-alt"></i> Tickets
+                </button>
+                <button class="text-gray-600 hover:text-gray-800">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+          
+          // Update total buyers count
+          totalBuyersElement.textContent = buyers.length;
+        }
+      } catch (err) {
+        console.error(err);
+        tableMessage.innerHTML = `
+          <div class="flex flex-col items-center justify-center">
+            <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
+            <p class="text-red-500 text-lg">Failed to load buyers.</p>
+            <p class="text-gray-500">Please try again later or check your connection.</p>
+          </div>
+        `;
+        tableMessage.classList.remove('hidden');
+      }
+    }
+
+    buyerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      formMessage.textContent = '';
+      
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value;
+      
+      if (!firstName || !lastName || !email || !phone || !password) {
+        formMessage.innerHTML = '<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>Please fill in all fields.';
+        formMessage.className = 'text-red-600 text-center';
+        return;
+      }
+      
+      if (password.length < 6) {
+        formMessage.innerHTML = '<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>Password must be at least 6 characters long.';
+        formMessage.className = 'text-red-600 text-center';
+        return;
+      }
+
+      try {
+        // Show loading state
+        const submitBtn = buyerForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+        submitBtn.disabled = true;
+        
+        const res = await fetch('http://localhost:5000/api/buyers', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            first_name: firstName, 
+            last_name: lastName, 
+            email_id: email, 
+            phone_no: phone, 
+            password 
+          })
+        });
+        
+        // Restore button state
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        
+        if (!res.ok) throw new Error('Failed to add buyer');
+        
+        // Show success message
+        formMessage.innerHTML = '<i class="fas fa-check-circle text-green-600 mr-1"></i>Buyer added successfully!';
+        formMessage.className = 'text-green-600 text-center';
+        
+        // Reset form
+        buyerForm.reset();
+        
+        // Refresh buyers list
+        fetchBuyers();
+      } catch (err) {
+        formMessage.innerHTML = '<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>' + (err.message || 'Failed to add buyer');
+        formMessage.className = 'text-red-600 text-center';
+      }
+    });
+
+    // Initial Load
+    fetchBuyers();
+    setMockStats();
+  </script>
+
+</body>
+</html>

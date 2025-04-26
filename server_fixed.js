@@ -31,12 +31,6 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Serve static files from the client directory
-app.use(express.static('clientprateek backend/client2/client'));
-
-// Also serve static files from the root directory to allow accessing files using full path
-app.use(express.static('.'));
-
 app.get('/', (req, res) => res.send('🎵 Concert API is alive'));
 
 // Setup database triggers and functions
@@ -71,12 +65,6 @@ app.use('/api/payments', paymentsRouter);
 
 const artistsRouter = require('./routes/artists');
 app.use('/api/artists', artistsRouter);
-
-const buyersRouter = require('./routes/buyers');
-app.use('/api/buyers', buyersRouter);
-
-const venuesRouter = require('./routes/venues');
-app.use('/api/venues', venuesRouter);
 
 // Global error handling middleware
 app.use((err, req, res, next) => {

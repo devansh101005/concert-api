@@ -150,26 +150,7 @@ router.get('/:id/details', async (req, res) => {
     return res.status(400).json({ error: 'Invalid concert ID' });
   }
   try {
-    // Direct SQL query instead of calling a function that doesn't exist
-    const query = `
-      SELECT c.concert_id, c.name, c.date, c.time,
-             v.name AS venue_name, v.city AS venue_city, v.capacity AS venue_capacity,
-             a.artist_id, a.first_name AS artist_first_name, a.last_name AS artist_last_name, 
-             a.genre AS artist_genre, p.performance_time
-      FROM concert c
-      LEFT JOIN venue v ON c.venue_id = v.venue_id
-      LEFT JOIN performs p ON c.concert_id = p.concert_id
-      LEFT JOIN artist a ON p.artist_id = a.artist_id
-      WHERE c.concert_id = $1
-      ORDER BY p.performance_time
-    `;
-    
-    const { rows } = await pool.query(query, [concertId]);
-    
-    if (rows.length === 0) {
-      return res.status(404).json({ error: 'Concert not found' });
-    }
-    
+    const { rows } = await pool.query('SELECT * FROM get_concert_details($1)', [concertId]);
     res.json(rows);
   } catch (err) {
     console.error(err);
@@ -184,46 +165,11 @@ router.get('/:id/sales-summary', async (req, res) => {
     return res.status(400).json({ error: 'Invalid concert ID' });
   }
   try {
-    // Direct SQL query instead of calling a function that doesn't exist
-    const query = `
-      SELECT 
-        COUNT(t.ticket_id) AS total_tickets,
-        COALESCE(SUM(t.price), 0) AS total_revenue
-      FROM ticket t
-      WHERE t.concert_id = $1
-    `;
-    
-    const { rows } = await pool.query(query, [concertId]);
-    
+    const { rows } = await pool.query('SELECT * FROM get_ticket_sales_summary($1)', [concertId]);
     res.json(rows[0]);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to get ticket sales summary' });
-  }
-});
-
-// DELETE /api/concerts/:id - delete a concert
-router.delete('/:id', async (req, res) => {
-  const id = parseInt(req.params.id);
-  try {
-    // Check if the concert is referenced in the performs table
-    const checkPerformsQuery = 'SELECT 1 FROM performs WHERE concert_id = $1 LIMIT 1';
-    const performsResult = await pool.query(checkPerformsQuery, [id]);
-    
-    if (performsResult.rows.length > 0) {
-      return res.status(400).json({ 
-        error: 'Cannot delete concert', 
-        detail: 'This concert has associated performances. Remove these associations first.' 
-      });
-    }
-    
-    const q = 'DELETE FROM concert WHERE concert_id = $1 RETURNING concert_id';
-    const { rows } = await pool.query(q, [id]);
-    if (rows.length === 0) return res.status(404).json({ error: 'Concert not found' });
-    res.json({ message: 'Concert deleted successfully' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to delete concert' });
   }
 });
 

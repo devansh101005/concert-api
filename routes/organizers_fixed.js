@@ -31,7 +31,6 @@ router.get('/:id', async (req, res) => {
 
 // POST /api/organizers - add a new organizer
 router.post('/', async (req, res) => {
-  console.log('POST /api/organizers - Request received:', req.body);
   const { first_name, last_name, contact_info } = req.body;
   
   if (!first_name || !last_name || !contact_info) {
@@ -50,15 +49,7 @@ router.post('/', async (req, res) => {
     res.status(201).json(rows[0]);
   } catch (err) {
     console.error(err);
-    // Check if this is a unique constraint violation on contact_info
-    if (err.code === '23505' && err.constraint === 'organizer_contact_info_key') {
-      return res.status(400).json({ 
-        error: 'Contact info already exists', 
-        detail: 'An organizer with this contact info already exists in the database.' 
-      });
-    }
-    // Handle other database errors
-    res.status(500).json({ error: 'Failed to add organizer', detail: err.message });
+    res.status(500).json({ error: 'Failed to add organizer' });
   }
 });
 
@@ -73,13 +64,6 @@ router.put('/:id', async (req, res) => {
     res.json(rows[0]);
   } catch (err) {
     console.error(err);
-    // Check if this is a unique constraint violation on contact_info
-    if (err.code === '23505' && err.constraint === 'organizer_contact_info_key') {
-      return res.status(400).json({ 
-        error: 'Contact info already exists', 
-        detail: 'An organizer with this contact info already exists in the database.' 
-      });
-    }
     res.status(500).json({ error: 'Failed to update organizer' });
   }
 });
@@ -94,13 +78,6 @@ router.delete('/:id', async (req, res) => {
     res.json({ message: 'Organizer deleted' });
   } catch (err) {
     console.error(err);
-    // Check if this is a foreign key constraint violation
-    if (err.code === '23503') {
-      return res.status(400).json({ 
-        error: 'Cannot delete organizer', 
-        detail: 'This organizer is referenced by other records in the database.' 
-      });
-    }
     res.status(500).json({ error: 'Failed to delete organizer' });
   }
 });

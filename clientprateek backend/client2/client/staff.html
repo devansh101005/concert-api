@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Staff - ConcertHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .hero-section {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1508997449629-303059a039c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+      background-size: cover;
+      background-position: center;
+      height: 300px;
+    }
+    .staff-card {
+      transition: all 0.3s ease;
+    }
+    .staff-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    .btn-primary {
+      @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300;
+    }
+    .btn-secondary {
+      @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-300;
+    }
+    .form-input {
+      @apply w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
+    }
+    .form-label {
+      @apply block text-sm font-medium text-gray-700 mb-1;
+    }
+    .ticket-section {
+      transition: all 0.3s ease;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+    }
+    .ticket-section.active {
+      max-height: 2000px;
+      opacity: 1;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center">
+        <i class="fas fa-music text-2xl mr-2"></i>
+        <h1 class="text-2xl font-bold">ConcertHub</h1>
+      </div>
+      <nav class="hidden md:block">
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-700 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-700 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-700 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-700 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 bg-blue-700 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-700 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-700 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-700 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-700 rounded">Venue</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobileMenuButton" class="text-white focus:outline-none">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-blue-700 mt-2 p-4 rounded-lg">
+      <div class="flex flex-col space-y-2">
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-800 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-800 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-800 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-800 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 bg-blue-800 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-800 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-800 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-800 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-800 rounded">Venue</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section flex items-center justify-center text-white">
+    <div class="container mx-auto text-center px-4">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Our Event Staff</h1>
+      <p class="text-lg md:text-xl mb-6 max-w-2xl mx-auto">Meet the dedicated team members who ensure our concerts run smoothly and provide exceptional experiences.</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-10">
+    <!-- Staff Tickets Section -->
+    <div id="staffTicketsSection" class="ticket-section bg-white rounded-xl shadow-lg overflow-hidden mb-10">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-2xl font-bold text-blue-700 flex items-center">
+            <i class="fas fa-ticket-alt mr-2"></i>Tickets for Concert: <span id="concertName" class="ml-2">Loading...</span>
+          </h3>
+          <button id="closeTickets" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        
+        <div class="bg-blue-50 p-4 rounded-lg mb-4">
+          <p id="ticketCount" class="flex items-center">
+            <i class="fas fa-spinner fa-spin mr-2 text-blue-600"></i>Loading ticket information...
+          </p>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="py-3 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ticket ID</th>
+                <th class="py-3 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seat</th>
+                <th class="py-3 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                <th class="py-3 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer Name</th>
+                <th class="py-3 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+              </tr>
+            </thead>
+            <tbody id="ticketTableBody" class="divide-y divide-gray-200">
+              <!-- Ticket rows will be added here -->
+              <tr>
+                <td colspan="5" class="py-4 text-center text-gray-500">
+                  <i class="fas fa-spinner fa-spin mr-2"></i>Loading tickets...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Left Column - Staff Form -->
+      <div class="lg:col-span-1 order-2 lg:order-1">
+        <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+          <h2 class="text-2xl font-bold mb-6 text-blue-700 flex items-center">
+            <i class="fas fa-user-plus mr-2"></i>Add Staff Member
+          </h2>
+          <form id="staffForm" class="space-y-4">
+            <div>
+              <label for="name" class="form-label">Full Name</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-user"></i>
+                </span>
+                <input type="text" id="name" placeholder="Enter staff member's name" class="form-input rounded-l-none" required />
+              </div>
+            </div>
+            
+            <div>
+              <label for="role" class="form-label">Role</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-briefcase"></i>
+                </span>
+                <select id="role" class="form-input rounded-l-none" required>
+                  <option value="">Select a role</option>
+                  <option value="Security">Security</option>
+                  <option value="Usher">Usher</option>
+                  <option value="Ticket Checker">Ticket Checker</option>
+                  <option value="Backstage Staff">Backstage Staff</option>
+                  <option value="Sound Engineer">Sound Engineer</option>
+                  <option value="Lighting Technician">Lighting Technician</option>
+                  <option value="Merchandise Seller">Merchandise Seller</option>
+                  <option value="Concessions">Concessions</option>
+                  <option value="First Aid">First Aid</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            
+            <div>
+              <label for="contactInfo" class="form-label">Contact Information</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-phone"></i>
+                </span>
+                <input type="text" id="contactInfo" placeholder="Enter phone or email" class="form-input rounded-l-none" required />
+              </div>
+            </div>
+            
+            <div>
+              <label for="concertId" class="form-label">Assigned Concert</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-music"></i>
+                </span>
+                <input type="number" id="concertId" placeholder="Enter concert ID" class="form-input rounded-l-none" required />
+              </div>
+              <p class="text-xs text-gray-500 mt-1">Find concert IDs on the Concerts page</p>
+            </div>
+            
+            <div>
+              <label for="shift" class="form-label">Shift Time</label>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="flex">
+                  <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                    <i class="fas fa-clock"></i>
+                  </span>
+                  <input type="time" id="shiftStart" class="form-input rounded-l-none" />
+                </div>
+                <div class="flex">
+                  <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                    <i class="fas fa-clock"></i>
+                  </span>
+                  <input type="time" id="shiftEnd" class="form-input rounded-l-none" />
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">Optional: Start and end time of shift</p>
+            </div>
+            
+            <button type="submit" class="w-full btn-primary flex items-center justify-center py-3">
+              <i class="fas fa-plus-circle mr-2"></i>Add Staff Member
+            </button>
+            <p id="formMessage" class="mt-2 text-center"></p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Column - Staff List -->
+      <div class="lg:col-span-2 order-1 lg:order-2">
+        <h2 class="text-3xl font-bold mb-6 text-blue-700 flex items-center">
+          <i class="fas fa-users mr-2"></i>Staff Members
+        </h2>
+        
+        <!-- Staff Grid -->
+        <div id="staffGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <!-- Loading placeholders -->
+          <div class="staff-card bg-white rounded-xl shadow-md p-4 animate-pulse">
+            <div class="flex items-center space-x-4">
+              <div class="rounded-full bg-gray-200 h-16 w-16"></div>
+              <div class="space-y-2 flex-1">
+                <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+                <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+              </div>
+            </div>
+          </div>
+          <div class="staff-card bg-white rounded-xl shadow-md p-4 animate-pulse">
+            <div class="flex items-center space-x-4">
+              <div class="rounded-full bg-gray-200 h-16 w-16"></div>
+              <div class="space-y-2 flex-1">
+                <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+                <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Staff List -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="p-4 bg-blue-50 border-b border-blue-100">
+            <h3 class="text-xl font-semibold text-blue-700 flex items-center">
+              <i class="fas fa-list mr-2"></i>All Staff Members
+            </h3>
+          </div>
+          <ul id="staffList" class="divide-y divide-gray-200">
+            <!-- Staff items will be appended here -->
+          </ul>
+          <div id="listMessage" class="p-8 text-center hidden">
+            <!-- Will show messages when list is empty or loading -->
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Staff Roles Section -->
+    <section class="mt-16">
+      <h2 class="text-3xl font-bold mb-8 text-center text-blue-700">Staff Roles & Responsibilities</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-shield-alt text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">Security Team</h3>
+          <p class="text-gray-600">Our security team ensures the safety of all attendees, artists, and staff throughout the event.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-headset text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">Technical Crew</h3>
+          <p class="text-gray-600">Our technical crew handles sound, lighting, and stage management to deliver a flawless performance experience.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-hands-helping text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">Customer Service</h3>
+          <p class="text-gray-600">Our customer service team assists attendees with seating, information, and ensures everyone has a great experience.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-semibold mb-4">ConcertHub</h3>
+          <p class="text-gray-400">Your one-stop platform to discover and book tickets for the best concerts and music events.</p>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="concerts.html" class="text-gray-400 hover:text-white transition">Concerts</a></li>
+            <li><a href="artist.html" class="text-gray-400 hover:text-white transition">Artists</a></li>
+            <li><a href="Venue.html" class="text-gray-400 hover:text-white transition">Venues</a></li>
+            <li><a href="tickets.html" class="text-gray-400 hover:text-white transition">Tickets</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Support</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">FAQs</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Connect With Us</h3>
+          <div class="flex space-x-4 mb-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
+          </div>
+          <p class="text-gray-400">Subscribe to our newsletter for updates on upcoming concerts and exclusive offers.</p>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2025 ConcertHub. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobileMenuButton').addEventListener('click', function() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    const staffList = document.getElementById('staffList');
+    const staffGrid = document.getElementById('staffGrid');
+    const listMessage = document.getElementById('listMessage');
+    const staffForm = document.getElementById('staffForm');
+    const formMessage = document.getElementById('formMessage');
+    const staffTicketsSection = document.getElementById('staffTicketsSection');
+    const concertNameElement = document.getElementById('concertName');
+    const ticketCountElement = document.getElementById('ticketCount');
+    const ticketTableBody = document.getElementById('ticketTableBody');
+    const closeTicketsBtn = document.getElementById('closeTickets');
+    
+    // Staff profile images (placeholders)
+    const staffImages = [
+      // 'https://randomuser.me/api/portraits/men/71.jpg',
+      // 'https://randomuser.me/api/portraits/women/54.jpg',
+      // 'https://randomuser.me/api/portraits/men/22.jpg',
+      // 'https://randomuser.me/api/portraits/women/43.jpg',
+      // 'https://randomuser.me/api/portraits/men/36.jpg',
+      // 'https://randomuser.me/api/portraits/women/18.jpg'
+    ];
+
+    // Role icons mapping
+    const roleIcons = {
+      'Security': 'fas fa-shield-alt',
+      'Usher': 'fas fa-door-open',
+      'Ticket Checker': 'fas fa-ticket-alt',
+      'Backstage Staff': 'fas fa-theater-masks',
+      'Sound Engineer': 'fas fa-volume-up',
+      'Lighting Technician': 'fas fa-lightbulb',
+      'Merchandise Seller': 'fas fa-tshirt',
+      'Concessions': 'fas fa-utensils',
+      'First Aid': 'fas fa-first-aid',
+      'Other': 'fas fa-user-tie'
+    };
+
+    // Get icon for role
+    function getRoleIcon(role) {
+      return roleIcons[role] || 'fas fa-user-tie';
+    }
+    
+    // Close tickets section
+    closeTicketsBtn.addEventListener('click', function() {
+      staffTicketsSection.classList.remove('active');
+    });
+
+    // Function to fetch tickets for a specific concert
+    async function fetchTicketsForConcert(concertId, concertName) {
+      staffTicketsSection.classList.add('active');
+      concertNameElement.textContent = concertName || `#${concertId}`;
+      ticketCountElement.innerHTML = '<i class="fas fa-spinner fa-spin mr-2 text-blue-600"></i>Loading ticket information...';
+      ticketTableBody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i>Loading tickets...</td></tr>';
+      
+      try {
+        // Fetch concert details to get the name if not provided
+        if (!concertName) {
+          try {
+            const concertRes = await fetch(`http://localhost:5000/api/concerts/${concertId}`);
+            if (concertRes.ok) {
+              const concertData = await concertRes.json();
+              if (concertData && concertData.name) {
+                concertNameElement.textContent = concertData.name;
+              }
+            }
+          } catch (err) {
+            console.error('Error fetching concert details:', err);
+          }
+        }
+        
+        const res = await fetch(`http://localhost:5000/api/tickets/concert/${concertId}`);
+        if (!res.ok) throw new Error('Failed to load tickets');
+        const tickets = await res.json();
+        
+        if (tickets.length === 0) {
+          ticketCountElement.innerHTML = '<i class="fas fa-info-circle mr-2 text-blue-600"></i>No tickets found for this concert.';
+          ticketTableBody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">No tickets have been booked yet.</td></tr>';
+          return;
+        }
+        
+        ticketCountElement.innerHTML = `<i class="fas fa-ticket-alt mr-2 text-blue-600"></i>${tickets.length} ticket(s) found for this concert.`;
+        ticketTableBody.innerHTML = '';
+        
+        tickets.forEach(ticket => {
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-gray-50';
+          row.innerHTML = `
+            <td class="py-3 px-4 whitespace-nowrap">
+              <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+                #${ticket.ticket_id}
+              </span>
+            </td>
+            <td class="py-3 px-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <i class="fas fa-chair text-blue-600 mr-2"></i>
+                ${ticket.seat_no}
+              </div>
+            </td>
+            <td class="py-3 px-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <i class="fas fa-dollar-sign text-green-600 mr-2"></i>
+                ${parseFloat(ticket.price).toFixed(2)}
+              </div>
+            </td>
+            <td class="py-3 px-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <i class="fas fa-user text-gray-500 mr-2"></i>
+                ${ticket.first_name} ${ticket.last_name}
+              </div>
+            </td>
+            <td class="py-3 px-4">
+              <div class="text-sm">
+                <div class="flex items-center mb-1">
+                  <i class="fas fa-envelope text-gray-500 mr-2"></i>
+                  ${ticket.email_id || 'N/A'}
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-phone text-gray-500 mr-2"></i>
+                  ${ticket.phone_no || 'N/A'}
+                </div>
+              </div>
+            </td>
+          `;
+          ticketTableBody.appendChild(row);
+        });
+      } catch (err) {
+        console.error(err);
+        ticketCountElement.innerHTML = '<i class="fas fa-exclamation-triangle mr-2 text-red-600"></i>Failed to load tickets.';
+        ticketTableBody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-red-600">Failed to load tickets. Please try again.</td></tr>';
+      }
+    }
+
+    async function fetchStaff() {
+      try {
+        const res = await fetch('http://localhost:5000/api/staff');
+        if (!res.ok) throw new Error('Failed to fetch staff');
+        const staff = await res.json();
+        
+        // Clear loading placeholders
+        staffList.innerHTML = '';
+        staffGrid.innerHTML = '';
+        
+        if (staff.length === 0) {
+          // Show empty message
+          listMessage.innerHTML = `
+            <div class="flex flex-col items-center justify-center">
+              <i class="fas fa-users-slash text-gray-400 text-5xl mb-4"></i>
+              <p class="text-gray-500 text-lg">No staff members found.</p>
+              <p class="text-gray-500">Add your first staff member using the form.</p>
+            </div>
+          `;
+          listMessage.classList.remove('hidden');
+        } else {
+          listMessage.classList.add('hidden');
+          
+          // Populate list
+          staff.forEach(member => {
+            const li = document.createElement('li');
+            li.className = 'p-4 hover:bg-gray-50 transition cursor-pointer';
+            li.innerHTML = `
+              <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                    <i class="${getRoleIcon(member.role)} text-blue-600"></i>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">${member.name}</div>
+                    <div class="text-sm text-gray-500">
+                      <span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
+                        ${member.role}
+                      </span>
+                      <span class="text-gray-500">
+                        <i class="fas fa-phone-alt mr-1"></i> ${member.contact_info}
+                      </span>
+                    </div>
+                    <div class="text-xs text-blue-600 mt-1">
+                      <i class="fas fa-music mr-1"></i> Concert ID: ${member.concert_id}
+                      ${member.shift_start ? `<span class="ml-2"><i class="fas fa-clock mr-1"></i> ${member.shift_start} - ${member.shift_end || 'End'}</span>` : ''}
+                    </div>
+                  </div>
+                </div>
+                <button class="view-tickets-btn btn-primary text-sm py-1 px-3 flex items-center">
+                  <i class="fas fa-ticket-alt mr-1"></i> View Tickets
+                </button>
+              </div>
+            `;
+            
+            // Add click event to view tickets
+            const viewTicketsBtn = li.querySelector('.view-tickets-btn');
+            viewTicketsBtn.addEventListener('click', (e) => {
+              e.stopPropagation(); // Prevent the li click event from firing
+              fetchTicketsForConcert(member.concert_id);
+            });
+            
+            // Also make the whole li clickable
+            li.addEventListener('click', () => {
+              fetchTicketsForConcert(member.concert_id);
+            });
+            
+            staffList.appendChild(li);
+          });
+          
+          // Populate grid (featured staff - show up to 4)
+          const featuredStaff = staff.slice(0, 4);
+          featuredStaff.forEach((member, index) => {
+            const card = document.createElement('div');
+            card.className = 'staff-card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer';
+            
+            card.innerHTML = `
+              <div class="md:flex">
+                <div class="md:flex-shrink-0">
+                  <img class="h-48 w-full object-cover md:w-48" src="${staffImages[index % staffImages.length]}" alt="${member.name}">
+                </div>
+                <div class="p-6">
+                  <div class="flex items-center">
+                    <div class="uppercase tracking-wide text-sm text-blue-600 font-semibold flex items-center">
+                      <i class="${getRoleIcon(member.role)} mr-1"></i> 
+                      ${member.role}
+                    </div>
+                  </div>
+                  <a href="#" class="block mt-1 text-lg leading-tight font-medium text-black hover:underline">${member.name}</a>
+                  <p class="mt-2 text-gray-500">
+                    <i class="fas fa-phone-alt mr-1"></i> ${member.contact_info}
+                  </p>
+                  <p class="mt-1 text-sm text-gray-500">
+                    <i class="fas fa-music mr-1"></i> Concert #${member.concert_id}
+                  </p>
+                  <button class="mt-3 btn-primary text-sm py-1 px-3 flex items-center">
+                    <i class="fas fa-ticket-alt mr-1"></i> View Tickets
+                  </button>
+                </div>
+              </div>
+            `;
+            
+            // Add click event to view tickets
+            card.addEventListener('click', () => {
+              fetchTicketsForConcert(member.concert_id);
+            });
+            
+            staffGrid.appendChild(card);
+          });
+          
+          // If there are staff members, fetch tickets for the first one
+          if (staff.length > 0) {
+            fetchTicketsForConcert(staff[0].concert_id);
+          }
+        }
+      } catch (err) {
+        // Show error message
+        listMessage.innerHTML = `
+          <div class="flex flex-col items-center justify-center">
+            <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
+            <p class="text-red-500 text-lg">Failed to load staff members.</p>
+            <p class="text-gray-500">Please try again later or check your connection.</p>
+          </div>
+        `;
+        listMessage.classList.remove('hidden');
+      }
+    }
+
+    staffForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      formMessage.textContent = '';
+      
+      const name = document.getElementById('name').value.trim();
+      const role = document.getElementById('role').value.trim();
+      const contactInfo = document.getElementById('contactInfo').value.trim();
+      const concertId = parseInt(document.getElementById('concertId').value);
+      const shiftStart = document.getElementById('shiftStart').value;
+      const shiftEnd = document.getElementById('shiftEnd').value;
+      
+      if (!name || !role || !contactInfo || isNaN(concertId)) {
+        formMessage.innerHTML = '<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>Please fill in all required fields.';
+        formMessage.className = 'text-red-600 text-center';
+        return;
+      }
+
+      try {
+        // Show loading state
+        const submitBtn = staffForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+        submitBtn.disabled = true;
+        
+        const staffData = { 
+          name, 
+          role, 
+          contact_info: contactInfo, 
+          concert_id: concertId
+        };
+        
+        // Add optional fields if provided
+        if (shiftStart) staffData.shift_start = shiftStart;
+        if (shiftEnd) staffData.shift_end = shiftEnd;
+        
+        const res = await fetch('http://localhost:5000/api/staff', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(staffData),
+        });
+        
+        // Restore button state
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        
+        if (!res.ok) throw new Error('Failed to add staff member');
+        
+        // Show success message
+        formMessage.innerHTML = '<i class="fas fa-check-circle text-green-600 mr-1"></i>Staff member added successfully!';
+        formMessage.className = 'text-green-600 text-center';
+        
+        // Reset form
+        staffForm.reset();
+        
+        // Refresh staff list
+        fetchStaff();
+      } catch (err) {
+        formMessage.innerHTML = '<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>' + (err.message || 'Failed to add staff member');
+        formMessage.className = 'text-red-600 text-center';
+      }
+    });
+
+    // Initial Load
+    fetchStaff();
+  </script>
+
+</body>
+</html>

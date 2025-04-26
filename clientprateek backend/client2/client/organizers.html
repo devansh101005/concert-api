@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Organizers - ConcertHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .hero-section {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+      background-size: cover;
+      background-position: center;
+      height: 300px;
+    }
+    .organizer-card {
+      transition: all 0.3s ease;
+    }
+    .organizer-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    .btn-primary {
+      @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300;
+    }
+    .btn-secondary {
+      @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-300;
+    }
+    .form-input {
+      @apply w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
+    }
+    .form-label {
+      @apply block text-sm font-medium text-gray-700 mb-1;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center">
+        <i class="fas fa-music text-2xl mr-2"></i>
+        <h1 class="text-2xl font-bold">ConcertHub</h1>
+      </div>
+      <nav class="hidden md:block">
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-700 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-700 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-700 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 bg-blue-700 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-700 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-700 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-700 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-700 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-700 rounded">Venue</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobileMenuButton" class="text-white focus:outline-none">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-blue-700 mt-2 p-4 rounded-lg">
+      <div class="flex flex-col space-y-2">
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-800 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-800 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-800 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 bg-blue-800 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-800 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 hover:bg-blue-800 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-800 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-800 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-800 rounded">Venue</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section flex items-center justify-center text-white">
+    <div class="container mx-auto text-center px-4">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Meet Our Event Organizers</h1>
+      <p class="text-lg md:text-xl mb-6 max-w-2xl mx-auto">The dedicated professionals who bring our concerts to life with their expertise and passion.</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Left Column - Organizer Form -->
+      <div class="lg:col-span-1 order-2 lg:order-1">
+        <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+          <h2 class="text-2xl font-bold mb-6 text-blue-700 flex items-center">
+            <i class="fas fa-user-plus mr-2"></i>Add New Organizer
+          </h2>
+          <form id="organizerForm" class="space-y-4">
+            <div>
+              <label for="firstName" class="form-label">First Name</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-user"></i>
+                </span>
+                <input type="text" id="firstName" placeholder="Enter first name" class="form-input rounded-l-none" required />
+              </div>
+            </div>
+            
+            <div>
+              <label for="lastName" class="form-label">Last Name</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-user"></i>
+                </span>
+                <input type="text" id="lastName" placeholder="Enter last name" class="form-input rounded-l-none" required />
+              </div>
+            </div>
+            
+            <div>
+              <label for="contactInfo" class="form-label">Contact Information</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-phone"></i>
+                </span>
+                <input type="text" id="contactInfo" placeholder="Enter phone or email" class="form-input rounded-l-none" required />
+              </div>
+            </div>
+            
+            <div>
+              <label for="role" class="form-label">Role</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-briefcase"></i>
+                </span>
+                <select id="role" class="form-input rounded-l-none">
+                  <option value="">Select a role</option>
+                  <option value="Event Manager">Event Manager</option>
+                  <option value="Production Manager">Production Manager</option>
+                  <option value="Marketing Coordinator">Marketing Coordinator</option>
+                  <option value="Logistics Coordinator">Logistics Coordinator</option>
+                  <option value="Venue Coordinator">Venue Coordinator</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            
+            <div>
+              <label for="experience" class="form-label">Years of Experience</label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500">
+                  <i class="fas fa-calendar-alt"></i>
+                </span>
+                <input type="number" id="experience" min="0" max="50" placeholder="Enter years of experience" class="form-input rounded-l-none" />
+              </div>
+            </div>
+            
+            <button type="submit" class="w-full btn-primary flex items-center justify-center py-3">
+              <i class="fas fa-plus-circle mr-2"></i>Add Organizer
+            </button>
+            <p id="formMessage" class="mt-2 text-center"></p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Column - Organizers List -->
+      <div class="lg:col-span-2 order-1 lg:order-2">
+        <h2 class="text-3xl font-bold mb-6 text-blue-700 flex items-center">
+          <i class="fas fa-users mr-2"></i>Our Organizers
+        </h2>
+        
+        <!-- Featured Organizers Grid -->
+        <div id="organizerGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <!-- Loading placeholders -->
+          <div class="organizer-card bg-white rounded-xl shadow-md p-4 animate-pulse">
+            <div class="flex items-center space-x-4">
+              <div class="rounded-full bg-gray-200 h-16 w-16"></div>
+              <div class="space-y-2 flex-1">
+                <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+                <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+              </div>
+            </div>
+          </div>
+          <div class="organizer-card bg-white rounded-xl shadow-md p-4 animate-pulse">
+            <div class="flex items-center space-x-4">
+              <div class="rounded-full bg-gray-200 h-16 w-16"></div>
+              <div class="space-y-2 flex-1">
+                <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+                <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Organizers List -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="p-4 bg-blue-50 border-b border-blue-100 flex justify-between items-center">
+            <h3 class="text-xl font-semibold text-blue-700 flex items-center">
+              <i class="fas fa-list mr-2"></i>All Organizers
+            </h3>
+            <div class="flex space-x-2">
+              <button id="viewGrid" class="p-2 rounded bg-blue-100 text-blue-700 hover:bg-blue-200">
+                <i class="fas fa-th-large"></i>
+              </button>
+              <button id="viewList" class="p-2 rounded bg-white text-blue-700 hover:bg-blue-100">
+                <i class="fas fa-list"></i>
+              </button>
+            </div>
+          </div>
+          <ul id="organizerList" class="divide-y divide-gray-200">
+            <!-- Organizer items will be dynamically appended here -->
+          </ul>
+          <div id="listMessage" class="p-8 text-center hidden">
+            <!-- Will show messages when list is empty or loading -->
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Organizer Team Section -->
+    <section class="mt-16">
+      <h2 class="text-3xl font-bold mb-8 text-center text-blue-700">Our Organizing Team</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-calendar-check text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">Event Planning</h3>
+          <p class="text-gray-600">Our event planners coordinate all aspects of concert production, from initial concept to final execution.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-bullhorn text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">Marketing & Promotion</h3>
+          <p class="text-gray-600">Our marketing team ensures maximum visibility for all concerts through strategic promotion and advertising.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <div class="text-center mb-4">
+            <span class="inline-block p-3 bg-blue-100 text-blue-600 rounded-full">
+              <i class="fas fa-truck text-3xl"></i>
+            </span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-center">Logistics & Operations</h3>
+          <p class="text-gray-600">Our logistics team handles all operational aspects, ensuring smooth execution of every concert event.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-semibold mb-4">ConcertHub</h3>
+          <p class="text-gray-400">Your one-stop platform to discover and book tickets for the best concerts and music events.</p>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="concerts.html" class="text-gray-400 hover:text-white transition">Concerts</a></li>
+            <li><a href="artist.html" class="text-gray-400 hover:text-white transition">Artists</a></li>
+            <li><a href="Venue.html" class="text-gray-400 hover:text-white transition">Venues</a></li>
+            <li><a href="tickets.html" class="text-gray-400 hover:text-white transition">Tickets</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Support</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">FAQs</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Connect With Us</h3>
+          <div class="flex space-x-4 mb-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
+          </div>
+          <p class="text-gray-400">Subscribe to our newsletter for updates on upcoming concerts and exclusive offers.</p>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2025 ConcertHub. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobileMenuButton').addEventListener('click', function() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    const organizerList = document.getElementById('organizerList');
+    const organizerGrid = document.getElementById('organizerGrid');
+    const listMessage = document.getElementById('listMessage');
+    const organizerForm = document.getElementById('organizerForm');
+    const formMessage = document.getElementById('formMessage');
+    const viewGridBtn = document.getElementById('viewGrid');
+    const viewListBtn = document.getElementById('viewList');
+    
+    // Organizer profile images (placeholders)
+    const organizerImages = [
+      'https://randomuser.me/api/portraits/men/41.jpg',
+      'https://randomuser.me/api/portraits/women/67.jpg',
+      'https://randomuser.me/api/portraits/men/52.jpg',
+      'https://randomuser.me/api/portraits/women/33.jpg',
+      'https://randomuser.me/api/portraits/men/18.jpg',
+      'https://randomuser.me/api/portraits/women/28.jpg'
+    ];
+
+    // Role icons mapping
+    const roleIcons = {
+      'Event Manager': 'fas fa-tasks',
+      'Production Manager': 'fas fa-cogs',
+      'Marketing Coordinator': 'fas fa-bullhorn',
+      'Logistics Coordinator': 'fas fa-truck',
+      'Venue Coordinator': 'fas fa-map-marker-alt',
+      'Other': 'fas fa-user-tie'
+    };
+
+    // Get icon for role
+    function getRoleIcon(role) {
+      return roleIcons[role] || 'fas fa-user-tie';
+    }
+
+    // Toggle between grid and list views
+    viewGridBtn.addEventListener('click', function() {
+      organizerGrid.classList.remove('hidden');
+      viewGridBtn.classList.remove('bg-white');
+      viewGridBtn.classList.add('bg-blue-100');
+      viewListBtn.classList.remove('bg-blue-100');
+      viewListBtn.classList.add('bg-white');
+    });
+    
+    viewListBtn.addEventListener('click', function() {
+      organizerGrid.classList.add('hidden');
+      viewListBtn.classList.remove('bg-white');
+      viewListBtn.classList.add('bg-blue-100');
+      viewGridBtn.classList.remove('bg-blue-100');
+      viewGridBtn.classList.add('bg-white');
+    });
+
+    async function fetchOrganizers() {
+      try {
+        const res = await fetch('http://localhost:5000/api/organizers');
+        if (!res.ok) throw new Error('Failed to fetch organizers');
+        const organizers = await res.json();
+        
+        // Clear loading placeholders
+        organizerList.innerHTML = '';
+        organizerGrid.innerHTML = '';
+        
+        if (organizers.length === 0) {
+          // Show empty message
+          listMessage.innerHTML = `
+            <div class="flex flex-col items-center justify-center">
+              <i class="fas fa-users-slash text-gray-400 text-5xl mb-4"></i>
+              <p class="text-gray-500 text-lg">No organizers found.</p>
+              <p class="text-gray-500">Add your first organizer using the form.</p>
+            </div>
+          `;
+          listMessage.classList.remove('hidden');
+        } else {
+          listMessage.classList.add('hidden');
+          
+          // Populate list
+          organizers.forEach(organizer => {
+            const li = document.createElement('li');
+            li.className = 'p-4 hover:bg-gray-50 transition';
+            li.innerHTML = `
+              <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                    <i class="fas fa-user text-blue-600"></i>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">${organizer.first_name} ${organizer.last_name}</div>
+                    <div class="text-sm text-gray-500">
+                      <i class="fas fa-phone-alt mr-1"></i> ${organizer.contact_info}
+                    </div>
+                    ${organizer.role ? `
+                      <div class="text-xs text-blue-600">
+                        <i class="${getRoleIcon(organizer.role)} mr-1"></i> ${organizer.role}
+                      </div>
+                    ` : ''}
+                  </div>
+                </div>
+                <div class="flex space-x-2">
+                  <button class="btn-secondary text-sm py-1 px-3 flex items-center">
+                    <i class="fas fa-edit mr-1"></i> Edit
+                  </button>
+                </div>
+              </div>
+            `;
+            organizerList.appendChild(li);
+          });
+          
+          // Populate grid (featured organizers - show up to 4)
+          const featuredOrganizers = organizers.slice(0, 4);
+          featuredOrganizers.forEach((organizer, index) => {
+            const card = document.createElement('div');
+            card.className = 'organizer-card bg-white rounded-xl shadow-md overflow-hidden';
+            
+            card.innerHTML = `
+              <div class="md:flex">
+                <div class="md:flex-shrink-0">
+                  <img class="h-48 w-full object-cover md:w-48" src="${organizerImages[index % organizerImages.length]}" alt="${organizer.first_name} ${organizer.last_name}">
+                </div>
+                <div class="p-6">
+                  <div class="flex items-center">
+                    <div class="uppercase tracking-wide text-sm text-blue-600 font-semibold flex items-center">
+                      <i class="${organizer.role ? getRoleIcon(organizer.role) : 'fas fa-user-tie'} mr-1"></i> 
+                      ${organizer.role || 'Organizer'}
+                    </div>
+                  </div>
+                  <a href="#" class="block mt-1 text-lg leading-tight font-medium text-black hover:underline">${organizer.first_name} ${organizer.last_name}</a>
+                  <p class="mt-2 text-gray-500">
+                    <i class="fas fa-phone-alt mr-1"></i> ${organizer.contact_info}
+                  </p>
+                  ${organizer.experience ? `
+                    <p class="mt-1 text-sm text-gray-500">
+                      <i class="fas fa-calendar-alt mr-1"></i> ${organizer.experience} years of experience
+                    </p>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+            
+            organizerGrid.appendChild(card);
+          });
+        }
+      } catch (err) {
+        // Show error message
+        listMessage.innerHTML = `
+          <div class="flex flex-col items-center justify-center">
+            <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
+            <p class="text-red-500 text-lg">Failed to load organizers.</p>
+            <p class="text-gray-500">Please try again later or check your connection.</p>
+          </div>
+        `;
+        listMessage.classList.remove('hidden');
+      }
+    }
+
+    organizerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      formMessage.textContent = '';
+      
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const contactInfo = document.getElementById('contactInfo').value.trim();
+      const role = document.getElementById('role').value.trim();
+      const experience = document.getElementById('experience').value.trim();
+
+      if (!firstName || !lastName || !contactInfo) {
+        formMessage.innerHTML = '<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>First name, last name, and contact info are required.';
+        formMessage.className = 'text-red-600 text-center';
+        return;
+      }
+
+      try {
+        // Show loading state
+        const submitBtn = organizerForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+        submitBtn.disabled = true;
+        
+        const res = await fetch('http://localhost:5000/api/organizers', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            first_name: firstName, 
+            last_name: lastName, 
+            contact_info: contactInfo,
+            role: role,
+            experience: experience ? parseInt(experience) : null
+          }),
+        });
+        
+        // Restore button state
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        
+        if (!res.ok) throw new Error('Failed to add organizer');
+        
+        // Show success message
+        formMessage.innerHTML = '<i class="fas fa-check-circle text-green-600 mr-1"></i>Organizer added successfully!';
+        formMessage.className = 'text-green-600 text-center';
+        
+        // Reset form
+        organizerForm.reset();
+        
+        // Refresh organizers list
+        fetchOrganizers();
+      } catch (err) {
+        formMessage.innerHTML = '<i class="fas fa-exclamation-circle text-red-600 mr-1"></i>' + (err.message || 'Failed to add organizer');
+        formMessage.className = 'text-red-600 text-center';
+      }
+    });
+
+    // Initial Load
+    fetchOrganizers();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Concert Locations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-white to-indigo-100 min-h-screen font-sans text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-indigo-700 text-white shadow-md py-4 mb-10">
+    <h1 class="text-3xl font-bold text-center">📍 Concert Locations</h1>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4">
+
+    <!-- Table -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 text-indigo-800 text-center">Current Concert Locations</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded-lg shadow overflow-hidden">
+          <thead class="bg-indigo-100 text-indigo-800">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-medium">Concert ID</th>
+              <th class="px-6 py-3 text-left text-sm font-medium">Location</th>
+            </tr>
+          </thead>
+          <tbody id="locationsTable" class="divide-y divide-gray-200">
+            <!-- Rows will be populated here -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Form -->
+    <section class="bg-white p-6 rounded-xl shadow-md max-w-xl mx-auto">
+      <h2 class="text-xl font-bold mb-4 text-indigo-800 text-center">➕ Add New Concert Location</h2>
+      <form id="locationForm" class="space-y-4">
+        <div>
+          <label for="concertId" class="block font-medium">Concert ID:</label>
+          <input type="number" id="concertId" required class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+        </div>
+        <div>
+          <label for="location" class="block font-medium">Location:</label>
+          <input type="text" id="location" required class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+        </div>
+        <div class="text-center">
+          <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded-md shadow-md transition">Add Location</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- Script -->
+  <script>
+    async function fetchLocations() {
+      try {
+        const res = await fetch('/api/concert_locations');
+        if (!res.ok) throw new Error('Failed to fetch concert locations');
+        const locations = await res.json();
+        const tbody = document.querySelector('#locationsTable');
+        tbody.innerHTML = '';
+        if (locations.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="2" class="text-center p-4 text-gray-500">No locations found.</td></tr>';
+        } else {
+          locations.forEach(loc => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td class="px-6 py-4">${loc.concert_id}</td>
+              <td class="px-6 py-4">${loc.location}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    document.getElementById('locationForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const concertId = document.getElementById('concertId').value.trim();
+      const location = document.getElementById('location').value.trim();
+
+      try {
+        const res = await fetch('/api/concert_locations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ concert_id: parseInt(concertId), location })
+        });
+        if (!res.ok) throw new Error('Failed to add concert location');
+        alert('Concert location added successfully');
+        e.target.reset();
+        fetchLocations();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    // Initial load
+    fetchLocations();
+  </script>
+
+</body>
+</html>

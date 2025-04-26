@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Performances - ConcertHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">🎶 ConcertHub</h1>
+      <nav>
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-700 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-700 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-700 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-700 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-700 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 bg-blue-700 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-700 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-700 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-700 rounded">Venue</a>
+      </nav>
+    </div>
+  </header>
+
+
+  <!-- Main Content -->
+  <main class="container mx-auto p-8 space-y-8">
+    <h2 class="text-3xl font-semibold text-center">Manage Performances</h2>
+
+    <!-- Performances Table -->
+    <table id="performsTable" class="min-w-full table-auto mt-6 border-separate border-spacing-0.5">
+      <thead class="bg-blue-700 text-white">
+        <tr>
+          <th class="py-3 px-4 text-left">Artist ID</th>
+          <th class="py-3 px-4 text-left">Concert ID</th>
+          <th class="py-3 px-4 text-left">Performance ID</th>
+          <th class="py-3 px-4 text-left">Performance Time</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <!-- Add New Performance Form -->
+    <h2 class="text-2xl font-semibold mt-8">Add New Performance</h2>
+    <form id="performForm" class="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto space-y-6">
+      <div>
+        <label for="artistId" class="block text-sm font-medium text-gray-700">Artist ID</label>
+        <input type="number" id="artistId" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label for="concertId" class="block text-sm font-medium text-gray-700">Concert ID</label>
+        <input type="number" id="concertId" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label for="performanceId" class="block text-sm font-medium text-gray-700">Performance ID</label>
+        <input type="number" id="performanceId" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label for="performanceTime" class="block text-sm font-medium text-gray-700">Performance Time</label>
+        <input type="time" id="performanceTime" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <button type="submit" class="w-full bg-blue-700 text-white py-3 rounded-lg hover:bg-blue-800 transition">Add Performance</button>
+      <p id="formMessage" class="mt-4 text-center"></p>
+    </form>
+  </main>
+
+  <script>
+    // Fetch performances data
+    async function fetchPerforms() {
+      try {
+        const res = await fetch('/api/performs');
+        if (!res.ok) throw new Error('Failed to fetch performances');
+        const performs = await res.json();
+        const tbody = document.querySelector('#performsTable tbody');
+        tbody.innerHTML = '';
+        performs.forEach(p => {
+          const tr = document.createElement('tr');
+          tr.className = 'bg-white hover:bg-gray-100';
+          tr.innerHTML = `
+            <td class="py-3 px-4">${p.artist_id}</td>
+            <td class="py-3 px-4">${p.concert_id}</td>
+            <td class="py-3 px-4">${p.performance_id}</td>
+            <td class="py-3 px-4">${p.performance_time}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    // Handle form submission
+    document.getElementById('performForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const artistId = document.getElementById('artistId').value.trim();
+      const concertId = document.getElementById('concertId').value.trim();
+      const performanceId = document.getElementById('performanceId').value.trim();
+      const performanceTime = document.getElementById('performanceTime').value.trim();
+
+      try {
+        const res = await fetch('/api/performs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ artist_id: parseInt(artistId), concert_id: parseInt(concertId), performance_id: parseInt(performanceId), performance_time: performanceTime })
+        });
+        if (!res.ok) throw new Error('Failed to add performance');
+        alert('Performance added successfully');
+        e.target.reset();
+        fetchPerforms();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    // Initial fetch of performances
+    fetchPerforms();
+  </script>
+</body>
+</html>

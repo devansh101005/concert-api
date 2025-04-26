@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tickets - ConcertHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans">
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">🎶 ConcertHub</h1>
+      <nav>
+        <a href="index.html" class="px-3 py-2 hover:bg-blue-700 rounded">Home</a>
+        <a href="concerts.html" class="px-3 py-2 hover:bg-blue-700 rounded">Concerts</a>
+        <a href="sponsors.html" class="px-3 py-2 hover:bg-blue-700 rounded">Sponsors</a>
+        <a href="organizers.html" class="px-3 py-2 hover:bg-blue-700 rounded">Organizers</a>
+        <a href="staff.html" class="px-3 py-2 hover:bg-blue-700 rounded">Staff</a>
+        <a href="tickets.html" class="px-3 py-2 bg-blue-700 rounded">Tickets</a>
+        <a href="artist.html" class="px-3 py-2 hover:bg-blue-700 rounded">Artist</a>
+        <a href="buyer.html" class="px-3 py-2 hover:bg-blue-700 rounded">Buyer</a>
+        <a href="Venue.html" class="px-3 py-2 hover:bg-blue-700 rounded">Venue</a>
+      </nav>
+    </div>
+  </header>
+
+
+  <!-- Main Content -->
+  <main class="container mx-auto p-6 flex flex-col items-center justify-center space-y-6">
+    <h2 class="text-3xl font-semibold mb-6">Book a Ticket</h2>
+
+    <!-- Add Ticket Form -->
+    <form id="ticketForm" class="mb-6 space-y-4 max-w-md w-full bg-white p-6 rounded-lg shadow-lg">
+      <div>
+        <label for="concertId" class="block text-sm font-medium text-gray-700">Concert ID</label>
+        <input type="number" id="concertId" placeholder="Concert ID" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+        <input type="number" id="price" placeholder="Price" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label for="seatNo" class="block text-sm font-medium text-gray-700">Seat Number</label>
+        <input type="text" id="seatNo" placeholder="Seat Number" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label for="buyerFirstName" class="block text-sm font-medium text-gray-700">Buyer First Name</label>
+        <input type="text" id="buyerFirstName" placeholder="Buyer First Name" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label for="buyerLastName" class="block text-sm font-medium text-gray-700">Buyer Last Name</label>
+        <input type="text" id="buyerLastName" placeholder="Buyer Last Name" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label for="buyerEmail" class="block text-sm font-medium text-gray-700">Buyer Email</label>
+        <input type="email" id="buyerEmail" placeholder="Buyer Email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label for="buyerPhone" class="block text-sm font-medium text-gray-700">Buyer Phone</label>
+        <input type="tel" id="buyerPhone" placeholder="Buyer Phone" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <div>
+        <label for="paymentMethod" class="block text-sm font-medium text-gray-700">Payment Method</label>
+        <input type="text" id="paymentMethod" placeholder="Payment Method" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      </div>
+      <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition">Book Ticket</button>
+      <p id="formMessage" class="mt-2 text-center"></p>
+    </form>
+
+    <!-- Booked Tickets List -->
+    <h2 class="text-3xl font-semibold mb-6">Booked Tickets</h2>
+    <ul id="ticketList" class="space-y-3 w-full max-w-md">
+      <!-- Ticket items will be appended here -->
+    </ul>
+  </main>
+
+  <script>
+    const ticketList = document.getElementById('ticketList');
+    const ticketForm = document.getElementById('ticketForm');
+    const formMessage = document.getElementById('formMessage');
+
+    async function fetchTickets() {
+      ticketList.innerHTML = '<li>Loading tickets...</li>';
+      try {
+        const res = await fetch('http://localhost:5000/api/tickets');
+        if (!res.ok) throw new Error('Failed to load tickets');
+        const tickets = await res.json();
+        if (tickets.length === 0) {
+          ticketList.innerHTML = '<li>No tickets found.</li>';
+          return;
+        }
+        ticketList.innerHTML = '';
+        tickets.forEach(ticket => {
+          const li = document.createElement('li');
+          li.className = 'bg-white p-4 rounded-lg shadow-md hover:bg-gray-50 transition';
+          li.textContent = `Ticket ID: ${ticket.ticket_id}, Concert ID: ${ticket.concert_id}, Seat: ${ticket.seat_no}, Price: $${ticket.price} `;
+          const cancelBtn = document.createElement('button');
+          cancelBtn.textContent = 'Cancel';
+          cancelBtn.className = 'ml-4 bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700';
+          cancelBtn.addEventListener('click', () => cancelTicket(ticket.ticket_id));
+          li.appendChild(cancelBtn);
+          ticketList.appendChild(li);
+        });
+      } catch (err) {
+        ticketList.innerHTML = '<li class="text-red-600">Failed to load tickets. Please try again.</li>';
+      }
+    }
+
+    async function cancelTicket(ticketId) {
+      if (!confirm('Are you sure you want to cancel this ticket?')) return;
+      try {
+        const res = await fetch(`http://localhost:5000/api/tickets/${ticketId}`, {
+          method: 'DELETE'
+        });
+        if (!res.ok) throw new Error('Failed to cancel ticket');
+        fetchTickets();
+      } catch (err) {
+        alert('Failed to cancel ticket. Please try again.');
+      }
+    }
+
+    ticketForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      formMessage.textContent = '';
+      const concertId = parseInt(document.getElementById('concertId').value);
+      const price = parseFloat(document.getElementById('price').value);
+      const seatNo = document.getElementById('seatNo').value.trim();
+      const buyerFirstName = document.getElementById('buyerFirstName').value.trim();
+      const buyerLastName = document.getElementById('buyerLastName').value.trim();
+      const buyerEmail = document.getElementById('buyerEmail').value.trim();
+      const buyerPhone = document.getElementById('buyerPhone').value.trim();
+      const paymentMethod = document.getElementById('paymentMethod').value.trim();
+
+      if (isNaN(concertId) || isNaN(price) || !seatNo || !buyerFirstName || !buyerLastName || !buyerEmail || !buyerPhone || !paymentMethod) {
+        formMessage.textContent = 'Please fill in all fields correctly.';
+        formMessage.className = 'text-red-600';
+        return;
+      }
+
+      try {
+        const res = await fetch('http://localhost:5000/api/tickets', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            concertId,
+            price,
+            seatNo,
+            buyerFirstName,
+            buyerLastName,
+            buyerEmail,
+            buyerPhone,
+            paymentMethod
+          }),
+        });
+        if (!res.ok) throw new Error('Failed to book ticket');
+        formMessage.textContent = 'Ticket booked successfully!';
+        formMessage.className = 'text-green-600';
+        ticketForm.reset();
+        fetchTickets();
+      } catch (err) {
+        formMessage.textContent = 'Failed to book ticket. Please try again.';
+        formMessage.className = 'text-red-600';
+      }
+    });
+
+    fetchTickets();
+  </script>
+</body>
+</html>
